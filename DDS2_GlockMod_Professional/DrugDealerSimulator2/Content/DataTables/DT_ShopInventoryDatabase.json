@@ -1,0 +1,515 @@
+{
+  "Type": "DataTable",
+  "Name": "DT_ShopInventoryDatabase",
+  "Class": "UDataTable",
+  "Archetype": "DataTable'/Game/DataTables/DT_ShopInventoryDatabase.DT_ShopInventoryDatabase'",
+  "Properties": {
+    "RowStruct": {
+      "ObjectName": "ShopInventoryStruct",
+      "ObjectPath": "/Game/Blueprints/Data/ShopInventoryStruct"
+    }
+  },
+  "Rows": {
+    "GunShop_Glock17": {
+      "ShopID": {
+        "Type": "FString",
+        "Value": "GunShop_Downtown"
+      },
+      "ItemID": {
+        "Type": "FString",
+        "Value": "Glock17"
+      },
+      "ShopCategory": {
+        "Type": "EShopCategory",
+        "Value": "Firearms"
+      },
+      "ItemCategory": {
+        "Type": "EItemCategory",
+        "Value": "Pistols"
+      },
+      "AvailabilitySettings": {
+        "Type": "FAvailabilitySettings",
+        "Value": {
+          "bIsAvailable": {
+            "Type": "bool",
+            "Value": true
+          },
+          "BaseSpawnChance": {
+            "Type": "float",
+            "Value": 0.8
+          },
+          "MinQuantity": {
+            "Type": "int32",
+            "Value": 1
+          },
+          "MaxQuantity": {
+            "Type": "int32",
+            "Value": 3
+          },
+          "RestockInterval": {
+            "Type": "float",
+            "Value": 48.0
+          },
+          "SeasonalModifier": {
+            "Type": "float",
+            "Value": 1.0
+          }
+        }
+      },
+      "PricingSettings": {
+        "Type": "FPricingSettings",
+        "Value": {
+          "BasePriceMultiplier": {
+            "Type": "float",
+            "Value": 1.0
+          },
+          "PriceVariation": {
+            "Type": "float",
+            "Value": 0.1
+          },
+          "ReputationDiscount": {
+            "Type": "float",
+            "Value": 0.05
+          },
+          "BulkDiscountThreshold": {
+            "Type": "int32",
+            "Value": 2
+          },
+          "BulkDiscountRate": {
+            "Type": "float",
+            "Value": 0.02
+          },
+          "DynamicPricing": {
+            "Type": "bool",
+            "Value": true
+          }
+        }
+      },
+      "RequirementSettings": {
+        "Type": "FRequirementSettings",
+        "Value": {
+          "RequiredLicense": {
+            "Type": "ELicenseType",
+            "Value": "Firearms"
+          },
+          "MinReputation": {
+            "Type": "int32",
+            "Value": 0
+          },
+          "MinLevel": {
+            "Type": "int32",
+            "Value": 1
+          },
+          "RequiredQuests": {
+            "Type": "TArray<FString>",
+            "Value": []
+          },
+          "BackgroundCheckRequired": {
+            "Type": "bool",
+            "Value": true
+          },
+          "WaitingPeriod": {
+            "Type": "float",
+            "Value": 24.0
+          }
+        }
+      },
+      "DisplaySettings": {
+        "Type": "FDisplaySettings",
+        "Value": {
+          "ShopDisplayName": {
+            "Type": "FText",
+            "Value": {
+              "SourceString": "Glock 17 - Služební pistole",
+              "Key": "Shop.GunShop.Glock17.DisplayName",
+              "Namespace": "DDS2"
+            }
+          },
+          "ShopDescription": {
+            "Type": "FText",
+            "Value": {
+              "SourceString": "Spolehlivá rakouská pistole. Vyžaduje zbrojní licenci.",
+              "Key": "Shop.GunShop.Glock17.Description",
+              "Namespace": "DDS2"
+            }
+          },
+          "bShowInCatalog": {
+            "Type": "bool",
+            "Value": true
+          },
+          "CatalogPriority": {
+            "Type": "int32",
+            "Value": 10
+          }
+        }
+      }
+    },
+    "BlackMarket_Glock17": {
+      "ShopID": {
+        "Type": "FString",
+        "Value": "BlackMarket_Underground"
+      },
+      "ItemID": {
+        "Type": "FString",
+        "Value": "Glock17"
+      },
+      "ShopCategory": {
+        "Type": "EShopCategory",
+        "Value": "IllegalWeapons"
+      },
+      "ItemCategory": {
+        "Type": "EItemCategory",
+        "Value": "Pistols"
+      },
+      "AvailabilitySettings": {
+        "Type": "FAvailabilitySettings",
+        "Value": {
+          "bIsAvailable": {
+            "Type": "bool",
+            "Value": true
+          },
+          "BaseSpawnChance": {
+            "Type": "float",
+            "Value": 0.6
+          },
+          "MinQuantity": {
+            "Type": "int32",
+            "Value": 1
+          },
+          "MaxQuantity": {
+            "Type": "int32",
+            "Value": 2
+          },
+          "RestockInterval": {
+            "Type": "float",
+            "Value": 72.0
+          },
+          "SeasonalModifier": {
+            "Type": "float",
+            "Value": 1.2
+          }
+        }
+      },
+      "PricingSettings": {
+        "Type": "FPricingSettings",
+        "Value": {
+          "BasePriceMultiplier": {
+            "Type": "float",
+            "Value": 1.4
+          },
+          "PriceVariation": {
+            "Type": "float",
+            "Value": 0.25
+          },
+          "ReputationDiscount": {
+            "Type": "float",
+            "Value": 0.1
+          },
+          "BulkDiscountThreshold": {
+            "Type": "int32",
+            "Value": 0
+          },
+          "BulkDiscountRate": {
+            "Type": "float",
+            "Value": 0.0
+          },
+          "DynamicPricing": {
+            "Type": "bool",
+            "Value": true
+          }
+        }
+      },
+      "RequirementSettings": {
+        "Type": "FRequirementSettings",
+        "Value": {
+          "RequiredLicense": {
+            "Type": "ELicenseType",
+            "Value": "None"
+          },
+          "MinReputation": {
+            "Type": "int32",
+            "Value": -10
+          },
+          "MinLevel": {
+            "Type": "int32",
+            "Value": 3
+          },
+          "RequiredQuests": {
+            "Type": "TArray<FString>",
+            "Value": [
+              "FindBlackMarket"
+            ]
+          },
+          "BackgroundCheckRequired": {
+            "Type": "bool",
+            "Value": false
+          },
+          "WaitingPeriod": {
+            "Type": "float",
+            "Value": 0.0
+          }
+        }
+      },
+      "DisplaySettings": {
+        "Type": "FDisplaySettings",
+        "Value": {
+          "ShopDisplayName": {
+            "Type": "FText",
+            "Value": {
+              "SourceString": "\"Rakouský speciál\" - Bez otázek",
+              "Key": "Shop.BlackMarket.Glock17.DisplayName",
+              "Namespace": "DDS2"
+            }
+          },
+          "ShopDescription": {
+            "Type": "FText",
+            "Value": {
+              "SourceString": "Čistá zbraň, žádné otázky. Hotovost pouze.",
+              "Key": "Shop.BlackMarket.Glock17.Description",
+              "Namespace": "DDS2"
+            }
+          },
+          "bShowInCatalog": {
+            "Type": "bool",
+            "Value": false
+          },
+          "CatalogPriority": {
+            "Type": "int32",
+            "Value": 0
+          }
+        }
+      },
+      "RiskSettings": {
+        "Type": "FRiskSettings",
+        "Value": {
+          "PoliceRaidChance": {
+            "Type": "float",
+            "Value": 0.05
+          },
+          "SnitchChance": {
+            "Type": "float",
+            "Value": 0.02
+          },
+          "QualityRisk": {
+            "Type": "float",
+            "Value": 0.15
+          },
+          "SerialNumberRemoved": {
+            "Type": "bool",
+            "Value": true
+          }
+        }
+      }
+    },
+    "GunShop_9mm": {
+      "ShopID": {
+        "Type": "FString",
+        "Value": "GunShop_Downtown"
+      },
+      "ItemID": {
+        "Type": "FString",
+        "Value": "9mm_Parabellum"
+      },
+      "ShopCategory": {
+        "Type": "EShopCategory",
+        "Value": "Ammunition"
+      },
+      "ItemCategory": {
+        "Type": "EItemCategory",
+        "Value": "PistolAmmo"
+      },
+      "AvailabilitySettings": {
+        "Type": "FAvailabilitySettings",
+        "Value": {
+          "bIsAvailable": {
+            "Type": "bool",
+            "Value": true
+          },
+          "BaseSpawnChance": {
+            "Type": "float",
+            "Value": 0.95
+          },
+          "MinQuantity": {
+            "Type": "int32",
+            "Value": 50
+          },
+          "MaxQuantity": {
+            "Type": "int32",
+            "Value": 200
+          },
+          "RestockInterval": {
+            "Type": "float",
+            "Value": 24.0
+          },
+          "SeasonalModifier": {
+            "Type": "float",
+            "Value": 1.0
+          }
+        }
+      },
+      "PricingSettings": {
+        "Type": "FPricingSettings",
+        "Value": {
+          "BasePriceMultiplier": {
+            "Type": "float",
+            "Value": 1.0
+          },
+          "PriceVariation": {
+            "Type": "float",
+            "Value": 0.05
+          },
+          "ReputationDiscount": {
+            "Type": "float",
+            "Value": 0.02
+          },
+          "BulkDiscountThreshold": {
+            "Type": "int32",
+            "Value": 100
+          },
+          "BulkDiscountRate": {
+            "Type": "float",
+            "Value": 0.1
+          },
+          "DynamicPricing": {
+            "Type": "bool",
+            "Value": false
+          }
+        }
+      },
+      "RequirementSettings": {
+        "Type": "FRequirementSettings",
+        "Value": {
+          "RequiredLicense": {
+            "Type": "ELicenseType",
+            "Value": "Firearms"
+          },
+          "MinReputation": {
+            "Type": "int32",
+            "Value": 0
+          },
+          "MinLevel": {
+            "Type": "int32",
+            "Value": 1
+          },
+          "RequiredQuests": {
+            "Type": "TArray<FString>",
+            "Value": []
+          },
+          "BackgroundCheckRequired": {
+            "Type": "bool",
+            "Value": false
+          },
+          "WaitingPeriod": {
+            "Type": "float",
+            "Value": 0.0
+          }
+        }
+      }
+    },
+    "BlackMarket_9mm": {
+      "ShopID": {
+        "Type": "FString",
+        "Value": "BlackMarket_Underground"
+      },
+      "ItemID": {
+        "Type": "FString",
+        "Value": "9mm_Parabellum"
+      },
+      "ShopCategory": {
+        "Type": "EShopCategory",
+        "Value": "IllegalAmmunition"
+      },
+      "ItemCategory": {
+        "Type": "EItemCategory",
+        "Value": "PistolAmmo"
+      },
+      "AvailabilitySettings": {
+        "Type": "FAvailabilitySettings",
+        "Value": {
+          "bIsAvailable": {
+            "Type": "bool",
+            "Value": true
+          },
+          "BaseSpawnChance": {
+            "Type": "float",
+            "Value": 0.85
+          },
+          "MinQuantity": {
+            "Type": "int32",
+            "Value": 20
+          },
+          "MaxQuantity": {
+            "Type": "int32",
+            "Value": 100
+          },
+          "RestockInterval": {
+            "Type": "float",
+            "Value": 48.0
+          },
+          "SeasonalModifier": {
+            "Type": "float",
+            "Value": 1.1
+          }
+        }
+      },
+      "PricingSettings": {
+        "Type": "FPricingSettings",
+        "Value": {
+          "BasePriceMultiplier": {
+            "Type": "float",
+            "Value": 1.6
+          },
+          "PriceVariation": {
+            "Type": "float",
+            "Value": 0.2
+          },
+          "ReputationDiscount": {
+            "Type": "float",
+            "Value": 0.08
+          },
+          "BulkDiscountThreshold": {
+            "Type": "int32",
+            "Value": 50
+          },
+          "BulkDiscountRate": {
+            "Type": "float",
+            "Value": 0.05
+          },
+          "DynamicPricing": {
+            "Type": "bool",
+            "Value": true
+          }
+        }
+      },
+      "RequirementSettings": {
+        "Type": "FRequirementSettings",
+        "Value": {
+          "RequiredLicense": {
+            "Type": "ELicenseType",
+            "Value": "None"
+          },
+          "MinReputation": {
+            "Type": "int32",
+            "Value": -5
+          },
+          "MinLevel": {
+            "Type": "int32",
+            "Value": 2
+          },
+          "RequiredQuests": {
+            "Type": "TArray<FString>",
+            "Value": []
+          },
+          "BackgroundCheckRequired": {
+            "Type": "bool",
+            "Value": false
+          },
+          "WaitingPeriod": {
+            "Type": "float",
+            "Value": 0.0
+          }
+        }
+      }
+    }
+  }
+}

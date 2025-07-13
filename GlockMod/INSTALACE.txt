@@ -1,0 +1,59 @@
+========================================
+   GLOCK MOD - NÁVOD K INSTALACI
+========================================
+
+POŽADAVKY:
+- Drug Dealer Simulator 2 (Steam verze)
+- Huslaa's DDS2 ModKit
+
+KROK 1: Stažení ModKit
+----------------------
+1. Jděte na: https://www.nexusmods.com/drugdealersimulator2/mods/45
+2. Stáhněte si "Huslaa's DDS2 ModKit"
+3. Rozbalte do libovolné složky (např. C:\DDS2Mods\)
+
+KROK 2: Instalace Glock Modu
+-----------------------------
+MOŽNOST A - Automatická instalace:
+1. Zkopírujte složku "GlockMod" do stejné složky jako ModKit
+2. Spusťte "install.bat" ve složce GlockMod
+3. Postupujte podle instrukcí
+
+MOŽNOST B - Ruční instalace:
+1. Zkopírujte složku "GlockMod" do složky s ModKit
+2. Přetáhněte složku "GlockMod" na soubor "Huslaa's DDS2 RePak.bat"
+3. Pokud je to poprvé, zadejte písmeno disku kde máte Steam (např. C)
+4. Počkejte na dokončení
+
+KROK 3: Spuštění hry
+--------------------
+1. Spusťte Drug Dealer Simulator 2 přes Steam
+2. Glock 17 najdete v:
+   - Černém trhu (60% šance)
+   - Zbrojíři (80% šance)
+
+STATISTIKY GLOCKU:
+------------------
+- Název: Glock 17
+- Cena: $800
+- Damage: 35
+- Přesnost: 75%
+- Dosah: 50m
+- Rychlost střelby: 400 RPM
+- Velikost zásobníku: 17 nábojů
+- Munice: 9mm Parabellum
+
+ŘEŠENÍ PROBLÉMŮ:
+----------------
+- Pokud se mod nenačte, zkontrolujte že máte nejnovější verzi hry
+- Ujistěte se, že jste postupovali přesně podle návodu
+- Zkontrolujte, že ModKit je ve správné složce
+
+KONTAKT:
+--------
+Pro podporu navštivte DDS Workshop Discord:
+https://discord.gg/xf6QQqkSaR
+
+========================================
+        Užijte si hru s Glockem!
+========================================

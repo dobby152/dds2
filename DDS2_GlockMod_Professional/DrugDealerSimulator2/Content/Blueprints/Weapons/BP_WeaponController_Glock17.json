@@ -1,0 +1,586 @@
+{
+  "Type": "Blueprint",
+  "Name": "BP_WeaponController_Glock17",
+  "Class": "UBlueprint",
+  "ParentClass": "/Game/Blueprints/Weapons/BP_WeaponControllerBase.BP_WeaponControllerBase_C",
+  "BlueprintType": "BPTYPE_Normal",
+  "Properties": {
+    "WeaponID": {
+      "Type": "FString",
+      "Value": "Glock17"
+    },
+    "FireMode": {
+      "Type": "EFireMode",
+      "Value": "SemiAutomatic"
+    },
+    "CurrentAmmo": {
+      "Type": "int32",
+      "Value": 17
+    },
+    "MaxAmmo": {
+      "Type": "int32",
+      "Value": 17
+    },
+    "ReserveAmmo": {
+      "Type": "int32",
+      "Value": 0
+    },
+    "bIsAiming": {
+      "Type": "bool",
+      "Value": false
+    },
+    "bIsReloading": {
+      "Type": "bool",
+      "Value": false
+    },
+    "bIsFiring": {
+      "Type": "bool",
+      "Value": false
+    },
+    "bCanFire": {
+      "Type": "bool",
+      "Value": true
+    },
+    "LastFireTime": {
+      "Type": "float",
+      "Value": 0.0
+    },
+    "RecoilAccumulation": {
+      "Type": "FVector2D",
+      "Value": {
+        "X": 0.0,
+        "Y": 0.0
+      }
+    },
+    "WeaponSway": {
+      "Type": "FVector2D",
+      "Value": {
+        "X": 0.0,
+        "Y": 0.0
+      }
+    },
+    "AimDownSightSpeed": {
+      "Type": "float",
+      "Value": 0.3
+    },
+    "ReloadSpeed": {
+      "Type": "float",
+      "Value": 2.5
+    },
+    "FireRate": {
+      "Type": "float",
+      "Value": 400.0
+    }
+  },
+  "Components": [
+    {
+      "ComponentClass": "UStaticMeshComponent",
+      "ComponentName": "WeaponMesh",
+      "Properties": {
+        "StaticMesh": "/Game/Meshes/Weapons/SM_Glock17.SM_Glock17",
+        "Materials": [
+          "/Game/Materials/Weapons/M_Glock17_Body.M_Glock17_Body",
+          "/Game/Materials/Weapons/M_Glock17_Slide.M_Glock17_Slide"
+        ]
+      }
+    },
+    {
+      "ComponentClass": "USceneComponent",
+      "ComponentName": "MuzzleLocation",
+      "Properties": {
+        "RelativeLocation": {
+          "X": 15.0,
+          "Y": 0.0,
+          "Z": 2.5
+        }
+      }
+    },
+    {
+      "ComponentClass": "USceneComponent",
+      "ComponentName": "EjectionPort",
+      "Properties": {
+        "RelativeLocation": {
+          "X": 5.0,
+          "Y": 1.5,
+          "Z": 3.0
+        }
+      }
+    },
+    {
+      "ComponentClass": "UAudioComponent",
+      "ComponentName": "WeaponAudio",
+      "Properties": {
+        "bAutoActivate": false
+      }
+    },
+    {
+      "ComponentClass": "UParticleSystemComponent",
+      "ComponentName": "MuzzleFlash",
+      "Properties": {
+        "Template": "/Game/VFX/Weapons/P_Glock17_MuzzleFlash.P_Glock17_MuzzleFlash",
+        "bAutoActivate": false
+      }
+    },
+    {
+      "ComponentClass": "UParticleSystemComponent",
+      "ComponentName": "ShellEjection",
+      "Properties": {
+        "Template": "/Game/VFX/Weapons/P_9mm_ShellEject.P_9mm_ShellEject",
+        "bAutoActivate": false
+      }
+    }
+  ],
+  "EventGraph": {
+    "Events": [
+      {
+        "EventName": "BeginPlay",
+        "EventType": "ActorBeginPlay",
+        "Nodes": [
+          {
+            "NodeType": "CallFunction",
+            "FunctionName": "InitializeWeapon",
+            "Parameters": []
+          }
+        ]
+      },
+      {
+        "EventName": "InputAction_Fire",
+        "EventType": "InputActionEvent",
+        "InputAction": "Fire",
+        "Nodes": [
+          {
+            "NodeType": "Branch",
+            "Condition": "CanFire",
+            "TrueExec": [
+              {
+                "NodeType": "CallFunction",
+                "FunctionName": "StartFiring"
+              }
+            ],
+            "FalseExec": [
+              {
+                "NodeType": "CallFunction",
+                "FunctionName": "PlayEmptySound"
+              }
+            ]
+          }
+        ]
+      },
+      {
+        "EventName": "InputAction_FireReleased",
+        "EventType": "InputActionEvent",
+        "InputAction": "FireReleased",
+        "Nodes": [
+          {
+            "NodeType": "CallFunction",
+            "FunctionName": "StopFiring"
+          }
+        ]
+      },
+      {
+        "EventName": "InputAction_Reload",
+        "EventType": "InputActionEvent",
+        "InputAction": "Reload",
+        "Nodes": [
+          {
+            "NodeType": "Branch",
+            "Condition": "CanReload",
+            "TrueExec": [
+              {
+                "NodeType": "CallFunction",
+                "FunctionName": "StartReload"
+              }
+            ]
+          }
+        ]
+      },
+      {
+        "EventName": "InputAction_Aim",
+        "EventType": "InputActionEvent",
+        "InputAction": "Aim",
+        "Nodes": [
+          {
+            "NodeType": "CallFunction",
+            "FunctionName": "StartAiming"
+          }
+        ]
+      },
+      {
+        "EventName": "InputAction_AimReleased",
+        "EventType": "InputActionEvent",
+        "InputAction": "AimReleased",
+        "Nodes": [
+          {
+            "NodeType": "CallFunction",
+            "FunctionName": "StopAiming"
+          }
+        ]
+      },
+      {
+        "EventName": "Tick",
+        "EventType": "ActorTick",
+        "Nodes": [
+          {
+            "NodeType": "CallFunction",
+            "FunctionName": "UpdateWeaponSway"
+          },
+          {
+            "NodeType": "CallFunction",
+            "FunctionName": "UpdateRecoilRecovery"
+          },
+          {
+            "NodeType": "CallFunction",
+            "FunctionName": "UpdateAimDownSights"
+          }
+        ]
+      }
+    ],
+    "Functions": [
+      {
+        "FunctionName": "InitializeWeapon",
+        "ReturnType": "void",
+        "Parameters": [],
+        "Implementation": {
+          "Nodes": [
+            {
+              "NodeType": "SetVariable",
+              "VariableName": "CurrentAmmo",
+              "Value": 17
+            },
+            {
+              "NodeType": "SetVariable",
+              "VariableName": "bCanFire",
+              "Value": true
+            },
+            {
+              "NodeType": "CallFunction",
+              "FunctionName": "UpdateAmmoDisplay"
+            }
+          ]
+        }
+      },
+      {
+        "FunctionName": "CanFire",
+        "ReturnType": "bool",
+        "Parameters": [],
+        "Implementation": {
+          "Nodes": [
+            {
+              "NodeType": "AndGate",
+              "Inputs": [
+                {
+                  "NodeType": "GreaterThan",
+                  "A": "CurrentAmmo",
+                  "B": 0
+                },
+                {
+                  "NodeType": "Not",
+                  "Input": "bIsReloading"
+                },
+                {
+                  "NodeType": "Variable",
+                  "VariableName": "bCanFire"
+                },
+                {
+                  "NodeType": "GreaterThan",
+                  "A": {
+                    "NodeType": "Subtract",
+                    "A": {
+                      "NodeType": "GetGameTimeInSeconds"
+                    },
+                    "B": "LastFireTime"
+                  },
+                  "B": {
+                    "NodeType": "Divide",
+                    "A": 60.0,
+                    "B": "FireRate"
+                  }
+                }
+              ]
+            }
+          ]
+        }
+      },
+      {
+        "FunctionName": "StartFiring",
+        "ReturnType": "void",
+        "Parameters": [],
+        "Implementation": {
+          "Nodes": [
+            {
+              "NodeType": "SetVariable",
+              "VariableName": "bIsFiring",
+              "Value": true
+            },
+            {
+              "NodeType": "SetVariable",
+              "VariableName": "LastFireTime",
+              "Value": {
+                "NodeType": "GetGameTimeInSeconds"
+              }
+            },
+            {
+              "NodeType": "CallFunction",
+              "FunctionName": "FireBullet"
+            },
+            {
+              "NodeType": "CallFunction",
+              "FunctionName": "PlayFireEffects"
+            },
+            {
+              "NodeType": "CallFunction",
+              "FunctionName": "ApplyRecoil"
+            },
+            {
+              "NodeType": "CallFunction",
+              "FunctionName": "ConsumeAmmo"
+            }
+          ]
+        }
+      },
+      {
+        "FunctionName": "FireBullet",
+        "ReturnType": "void",
+        "Parameters": [],
+        "Implementation": {
+          "Nodes": [
+            {
+              "NodeType": "GetPlayerCameraManager",
+              "OutputPin": "CameraManager"
+            },
+            {
+              "NodeType": "GetCameraLocation",
+              "Target": "CameraManager",
+              "OutputPin": "CameraLocation"
+            },
+            {
+              "NodeType": "GetCameraRotation",
+              "Target": "CameraManager",
+              "OutputPin": "CameraRotation"
+            },
+            {
+              "NodeType": "CallFunction",
+              "FunctionName": "CalculateSpread",
+              "Parameters": [
+                "CameraRotation"
+              ],
+              "OutputPin": "AdjustedRotation"
+            },
+            {
+              "NodeType": "GetForwardVector",
+              "Rotation": "AdjustedRotation",
+              "OutputPin": "FireDirection"
+            },
+            {
+              "NodeType": "Multiply",
+              "A": "FireDirection",
+              "B": 10000.0,
+              "OutputPin": "TraceDistance"
+            },
+            {
+              "NodeType": "Add",
+              "A": "CameraLocation",
+              "B": "TraceDistance",
+              "OutputPin": "TraceEnd"
+            },
+            {
+              "NodeType": "LineTraceByChannel",
+              "Start": "CameraLocation",
+              "End": "TraceEnd",
+              "TraceChannel": "ECC_Visibility",
+              "bTraceComplex": true,
+              "ActorsToIgnore": ["Self"],
+              "OutputPin": "HitResult"
+            },
+            {
+              "NodeType": "Branch",
+              "Condition": {
+                "NodeType": "BreakHitResult",
+                "HitResult": "HitResult",
+                "OutputPin": "bBlockingHit"
+              },
+              "TrueExec": [
+                {
+                  "NodeType": "CallFunction",
+                  "FunctionName": "ProcessHit",
+                  "Parameters": ["HitResult"]
+                }
+              ]
+            },
+            {
+              "NodeType": "CallFunction",
+              "FunctionName": "SpawnBulletTrail",
+              "Parameters": [
+                "CameraLocation",
+                {
+                  "NodeType": "Select",
+                  "Condition": {
+                    "NodeType": "BreakHitResult",
+                    "HitResult": "HitResult",
+                    "OutputPin": "bBlockingHit"
+                  },
+                  "TrueValue": {
+                    "NodeType": "BreakHitResult",
+                    "HitResult": "HitResult",
+                    "OutputPin": "Location"
+                  },
+                  "FalseValue": "TraceEnd"
+                }
+              ]
+            }
+          ]
+        }
+      },
+      {
+        "FunctionName": "CalculateSpread",
+        "ReturnType": "FRotator",
+        "Parameters": [
+          {
+            "ParameterName": "BaseRotation",
+            "ParameterType": "FRotator"
+          }
+        ],
+        "Implementation": {
+          "Nodes": [
+            {
+              "NodeType": "Select",
+              "Condition": "bIsAiming",
+              "TrueValue": 0.5,
+              "FalseValue": 2.0,
+              "OutputPin": "BaseSpread"
+            },
+            {
+              "NodeType": "Multiply",
+              "A": "BaseSpread",
+              "B": {
+                "NodeType": "CallFunction",
+                "FunctionName": "GetMovementSpreadMultiplier"
+              },
+              "OutputPin": "MovementSpread"
+            },
+            {
+              "NodeType": "Multiply",
+              "A": "MovementSpread",
+              "B": {
+                "NodeType": "CallFunction",
+                "FunctionName": "GetRecoilSpreadMultiplier"
+              },
+              "OutputPin": "FinalSpread"
+            },
+            {
+              "NodeType": "RandomFloatInRange",
+              "Min": {
+                "NodeType": "Multiply",
+                "A": "FinalSpread",
+                "B": -1.0
+              },
+              "Max": "FinalSpread",
+              "OutputPin": "RandomPitch"
+            },
+            {
+              "NodeType": "RandomFloatInRange",
+              "Min": {
+                "NodeType": "Multiply",
+                "A": "FinalSpread",
+                "B": -1.0
+              },
+              "Max": "FinalSpread",
+              "OutputPin": "RandomYaw"
+            },
+            {
+              "NodeType": "MakeRotator",
+              "Pitch": {
+                "NodeType": "Add",
+                "A": {
+                  "NodeType": "BreakRotator",
+                  "Rotator": "BaseRotation",
+                  "OutputPin": "Pitch"
+                },
+                "B": "RandomPitch"
+              },
+              "Yaw": {
+                "NodeType": "Add",
+                "A": {
+                  "NodeType": "BreakRotator",
+                  "Rotator": "BaseRotation",
+                  "OutputPin": "Yaw"
+                },
+                "B": "RandomYaw"
+              },
+              "Roll": {
+                "NodeType": "BreakRotator",
+                "Rotator": "BaseRotation",
+                "OutputPin": "Roll"
+              }
+            }
+          ]
+        }
+      },
+      {
+        "FunctionName": "ProcessHit",
+        "ReturnType": "void",
+        "Parameters": [
+          {
+            "ParameterName": "HitResult",
+            "ParameterType": "FHitResult"
+          }
+        ],
+        "Implementation": {
+          "Nodes": [
+            {
+              "NodeType": "BreakHitResult",
+              "HitResult": "HitResult",
+              "OutputPin": "HitActor"
+            },
+            {
+              "NodeType": "BreakHitResult",
+              "HitResult": "HitResult",
+              "OutputPin": "HitLocation"
+            },
+            {
+              "NodeType": "BreakHitResult",
+              "HitResult": "HitResult",
+              "OutputPin": "HitNormal"
+            },
+            {
+              "NodeType": "CallFunction",
+              "FunctionName": "CalculateDamage",
+              "Parameters": [
+                "HitLocation",
+                "HitActor"
+              ],
+              "OutputPin": "Damage"
+            },
+            {
+              "NodeType": "Branch",
+              "Condition": {
+                "NodeType": "IsValid",
+                "Object": "HitActor"
+              },
+              "TrueExec": [
+                {
+                  "NodeType": "CallFunction",
+                  "FunctionName": "ApplyDamage",
+                  "Target": "HitActor",
+                  "Parameters": [
+                    "Damage",
+                    "HitLocation"
+                  ]
+                }
+              ]
+            },
+            {
+              "NodeType": "CallFunction",
+              "FunctionName": "SpawnImpactEffect",
+              "Parameters": [
+                "HitLocation",
+                "HitNormal",
+                "HitActor"
+              ]
+            }
+          ]
+        }
+      }
+    ]
+  }
+}

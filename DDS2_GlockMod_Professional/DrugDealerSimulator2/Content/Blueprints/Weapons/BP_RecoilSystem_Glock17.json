@@ -1,0 +1,566 @@
+{
+  "Type": "Blueprint",
+  "Name": "BP_RecoilSystem_Glock17",
+  "Class": "UBlueprint",
+  "ParentClass": "/Game/Blueprints/Weapons/BP_RecoilSystemBase.BP_RecoilSystemBase_C",
+  "BlueprintType": "BPTYPE_Normal",
+  "Properties": {
+    "RecoilPattern": {
+      "Type": "TArray<FVector2D>",
+      "Value": [
+        {"X": 0.0, "Y": 8.0},
+        {"X": -1.2, "Y": 6.5},
+        {"X": 2.1, "Y": 7.2},
+        {"X": -0.8, "Y": 5.8},
+        {"X": 1.5, "Y": 6.9},
+        {"X": -2.0, "Y": 5.2},
+        {"X": 0.7, "Y": 6.1},
+        {"X": -1.8, "Y": 4.8},
+        {"X": 2.3, "Y": 5.5},
+        {"X": -0.5, "Y": 4.2},
+        {"X": 1.1, "Y": 4.8},
+        {"X": -1.6, "Y": 3.9},
+        {"X": 0.9, "Y": 4.1},
+        {"X": -0.3, "Y": 3.5},
+        {"X": 0.6, "Y": 3.2},
+        {"X": -0.8, "Y": 2.8},
+        {"X": 0.4, "Y": 2.5}
+      ]
+    },
+    "CurrentRecoilIndex": {
+      "Type": "int32",
+      "Value": 0
+    },
+    "RecoilMultiplier": {
+      "Type": "float",
+      "Value": 1.0
+    },
+    "RecoilRecoverySpeed": {
+      "Type": "float",
+      "Value": 8.0
+    },
+    "MaxRecoilAccumulation": {
+      "Type": "float",
+      "Value": 15.0
+    },
+    "CurrentRecoilOffset": {
+      "Type": "FVector2D",
+      "Value": {"X": 0.0, "Y": 0.0}
+    },
+    "TargetRecoilOffset": {
+      "Type": "FVector2D",
+      "Value": {"X": 0.0, "Y": 0.0}
+    },
+    "RecoilDecayRate": {
+      "Type": "float",
+      "Value": 0.95
+    },
+    "FirstShotMultiplier": {
+      "Type": "float",
+      "Value": 0.7
+    },
+    "AimingRecoilReduction": {
+      "Type": "float",
+      "Value": 0.6
+    },
+    "MovementRecoilIncrease": {
+      "Type": "float",
+      "Value": 1.4
+    },
+    "CrouchingRecoilReduction": {
+      "Type": "float",
+      "Value": 0.8
+    },
+    "LastShotTime": {
+      "Type": "float",
+      "Value": 0.0
+    },
+    "RecoilResetTime": {
+      "Type": "float",
+      "Value": 1.5
+    }
+  },
+  "Functions": [
+    {
+      "FunctionName": "ApplyRecoil",
+      "ReturnType": "void",
+      "Parameters": [
+        {
+          "ParameterName": "bIsAiming",
+          "ParameterType": "bool"
+        },
+        {
+          "ParameterName": "bIsMoving",
+          "ParameterType": "bool"
+        },
+        {
+          "ParameterName": "bIsCrouching",
+          "ParameterType": "bool"
+        }
+      ],
+      "Implementation": {
+        "Nodes": [
+          {
+            "NodeType": "CallFunction",
+            "FunctionName": "CheckRecoilReset"
+          },
+          {
+            "NodeType": "CallFunction",
+            "FunctionName": "CalculateRecoilMultiplier",
+            "Parameters": ["bIsAiming", "bIsMoving", "bIsCrouching"],
+            "OutputPin": "FinalMultiplier"
+          },
+          {
+            "NodeType": "CallFunction",
+            "FunctionName": "GetNextRecoilVector",
+            "OutputPin": "RecoilVector"
+          },
+          {
+            "NodeType": "Multiply",
+            "A": "RecoilVector",
+            "B": "FinalMultiplier",
+            "OutputPin": "AdjustedRecoil"
+          },
+          {
+            "NodeType": "Add",
+            "A": "TargetRecoilOffset",
+            "B": "AdjustedRecoil",
+            "OutputPin": "NewTargetOffset"
+          },
+          {
+            "NodeType": "CallFunction",
+            "FunctionName": "ClampRecoilOffset",
+            "Parameters": ["NewTargetOffset"],
+            "OutputPin": "ClampedOffset"
+          },
+          {
+            "NodeType": "SetVariable",
+            "VariableName": "TargetRecoilOffset",
+            "Value": "ClampedOffset"
+          },
+          {
+            "NodeType": "SetVariable",
+            "VariableName": "LastShotTime",
+            "Value": {
+              "NodeType": "GetGameTimeInSeconds"
+            }
+          },
+          {
+            "NodeType": "CallFunction",
+            "FunctionName": "IncrementRecoilIndex"
+          },
+          {
+            "NodeType": "CallFunction",
+            "FunctionName": "ApplyRecoilToCamera",
+            "Parameters": ["AdjustedRecoil"]
+          }
+        ]
+      }
+    },
+    {
+      "FunctionName": "CalculateRecoilMultiplier",
+      "ReturnType": "float",
+      "Parameters": [
+        {
+          "ParameterName": "bIsAiming",
+          "ParameterType": "bool"
+        },
+        {
+          "ParameterName": "bIsMoving",
+          "ParameterType": "bool"
+        },
+        {
+          "ParameterName": "bIsCrouching",
+          "ParameterType": "bool"
+        }
+      ],
+      "Implementation": {
+        "Nodes": [
+          {
+            "NodeType": "SetVariable",
+            "VariableName": "BaseMultiplier",
+            "Value": "RecoilMultiplier"
+          },
+          {
+            "NodeType": "Branch",
+            "Condition": {
+              "NodeType": "Equal",
+              "A": "CurrentRecoilIndex",
+              "B": 0
+            },
+            "TrueExec": [
+              {
+                "NodeType": "Multiply",
+                "A": "BaseMultiplier",
+                "B": "FirstShotMultiplier",
+                "OutputPin": "BaseMultiplier"
+              }
+            ]
+          },
+          {
+            "NodeType": "Branch",
+            "Condition": "bIsAiming",
+            "TrueExec": [
+              {
+                "NodeType": "Multiply",
+                "A": "BaseMultiplier",
+                "B": "AimingRecoilReduction",
+                "OutputPin": "BaseMultiplier"
+              }
+            ]
+          },
+          {
+            "NodeType": "Branch",
+            "Condition": "bIsMoving",
+            "TrueExec": [
+              {
+                "NodeType": "Multiply",
+                "A": "BaseMultiplier",
+                "B": "MovementRecoilIncrease",
+                "OutputPin": "BaseMultiplier"
+              }
+            ]
+          },
+          {
+            "NodeType": "Branch",
+            "Condition": "bIsCrouching",
+            "TrueExec": [
+              {
+                "NodeType": "Multiply",
+                "A": "BaseMultiplier",
+                "B": "CrouchingRecoilReduction",
+                "OutputPin": "BaseMultiplier"
+              }
+            ]
+          },
+          {
+            "NodeType": "CallFunction",
+            "FunctionName": "GetWeaponMasteryMultiplier",
+            "OutputPin": "MasteryMultiplier"
+          },
+          {
+            "NodeType": "Multiply",
+            "A": "BaseMultiplier",
+            "B": "MasteryMultiplier",
+            "OutputPin": "FinalMultiplier"
+          },
+          {
+            "NodeType": "ReturnNode",
+            "ReturnValue": "FinalMultiplier"
+          }
+        ]
+      }
+    },
+    {
+      "FunctionName": "GetNextRecoilVector",
+      "ReturnType": "FVector2D",
+      "Parameters": [],
+      "Implementation": {
+        "Nodes": [
+          {
+            "NodeType": "Branch",
+            "Condition": {
+              "NodeType": "GreaterEqual",
+              "A": "CurrentRecoilIndex",
+              "B": {
+                "NodeType": "ArrayLength",
+                "Array": "RecoilPattern"
+              }
+            },
+            "TrueExec": [
+              {
+                "NodeType": "ArrayGet",
+                "Array": "RecoilPattern",
+                "Index": {
+                  "NodeType": "Subtract",
+                  "A": {
+                    "NodeType": "ArrayLength",
+                    "Array": "RecoilPattern"
+                  },
+                  "B": 1
+                }
+              }
+            ],
+            "FalseExec": [
+              {
+                "NodeType": "ArrayGet",
+                "Array": "RecoilPattern",
+                "Index": "CurrentRecoilIndex"
+              }
+            ],
+            "OutputPin": "BaseRecoilVector"
+          },
+          {
+            "NodeType": "RandomFloatInRange",
+            "Min": 0.8,
+            "Max": 1.2,
+            "OutputPin": "RandomMultiplier"
+          },
+          {
+            "NodeType": "Multiply",
+            "A": "BaseRecoilVector",
+            "B": "RandomMultiplier",
+            "OutputPin": "RandomizedRecoil"
+          },
+          {
+            "NodeType": "ReturnNode",
+            "ReturnValue": "RandomizedRecoil"
+          }
+        ]
+      }
+    },
+    {
+      "FunctionName": "UpdateRecoilRecovery",
+      "ReturnType": "void",
+      "Parameters": [
+        {
+          "ParameterName": "DeltaTime",
+          "ParameterType": "float"
+        }
+      ],
+      "Implementation": {
+        "Nodes": [
+          {
+            "NodeType": "VectorInterpTo",
+            "Current": "CurrentRecoilOffset",
+            "Target": "TargetRecoilOffset",
+            "DeltaTime": "DeltaTime",
+            "InterpSpeed": "RecoilRecoverySpeed",
+            "OutputPin": "NewCurrentOffset"
+          },
+          {
+            "NodeType": "SetVariable",
+            "VariableName": "CurrentRecoilOffset",
+            "Value": "NewCurrentOffset"
+          },
+          {
+            "NodeType": "Multiply",
+            "A": "TargetRecoilOffset",
+            "B": "RecoilDecayRate",
+            "OutputPin": "DecayedTarget"
+          },
+          {
+            "NodeType": "SetVariable",
+            "VariableName": "TargetRecoilOffset",
+            "Value": "DecayedTarget"
+          },
+          {
+            "NodeType": "CallFunction",
+            "FunctionName": "ApplyCameraRecoil",
+            "Parameters": ["CurrentRecoilOffset"]
+          }
+        ]
+      }
+    },
+    {
+      "FunctionName": "CheckRecoilReset",
+      "ReturnType": "void",
+      "Parameters": [],
+      "Implementation": {
+        "Nodes": [
+          {
+            "NodeType": "Subtract",
+            "A": {
+              "NodeType": "GetGameTimeInSeconds"
+            },
+            "B": "LastShotTime",
+            "OutputPin": "TimeSinceLastShot"
+          },
+          {
+            "NodeType": "Branch",
+            "Condition": {
+              "NodeType": "GreaterThan",
+              "A": "TimeSinceLastShot",
+              "B": "RecoilResetTime"
+            },
+            "TrueExec": [
+              {
+                "NodeType": "SetVariable",
+                "VariableName": "CurrentRecoilIndex",
+                "Value": 0
+              },
+              {
+                "NodeType": "SetVariable",
+                "VariableName": "TargetRecoilOffset",
+                "Value": {"X": 0.0, "Y": 0.0}
+              }
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "FunctionName": "ApplyRecoilToCamera",
+      "ReturnType": "void",
+      "Parameters": [
+        {
+          "ParameterName": "RecoilVector",
+          "ParameterType": "FVector2D"
+        }
+      ],
+      "Implementation": {
+        "Nodes": [
+          {
+            "NodeType": "GetPlayerController",
+            "OutputPin": "PlayerController"
+          },
+          {
+            "NodeType": "AddControllerPitchInput",
+            "Target": "PlayerController",
+            "Value": {
+              "NodeType": "Multiply",
+              "A": {
+                "NodeType": "BreakVector2D",
+                "Vector2D": "RecoilVector",
+                "OutputPin": "Y"
+              },
+              "B": -0.01
+            }
+          },
+          {
+            "NodeType": "AddControllerYawInput",
+            "Target": "PlayerController",
+            "Value": {
+              "NodeType": "Multiply",
+              "A": {
+                "NodeType": "BreakVector2D",
+                "Vector2D": "RecoilVector",
+                "OutputPin": "X"
+              },
+              "B": 0.01
+            }
+          }
+        ]
+      }
+    },
+    {
+      "FunctionName": "GetWeaponMasteryMultiplier",
+      "ReturnType": "float",
+      "Parameters": [],
+      "Implementation": {
+        "Nodes": [
+          {
+            "NodeType": "CallFunction",
+            "FunctionName": "GetPlayerWeaponMastery",
+            "Parameters": ["Glock17"],
+            "OutputPin": "MasteryLevel"
+          },
+          {
+            "NodeType": "Divide",
+            "A": "MasteryLevel",
+            "B": 100.0,
+            "OutputPin": "MasteryPercent"
+          },
+          {
+            "NodeType": "Multiply",
+            "A": "MasteryPercent",
+            "B": 0.3,
+            "OutputPin": "RecoilReduction"
+          },
+          {
+            "NodeType": "Subtract",
+            "A": 1.0,
+            "B": "RecoilReduction",
+            "OutputPin": "FinalMultiplier"
+          },
+          {
+            "NodeType": "Clamp",
+            "Value": "FinalMultiplier",
+            "Min": 0.5,
+            "Max": 1.0,
+            "OutputPin": "ClampedMultiplier"
+          },
+          {
+            "NodeType": "ReturnNode",
+            "ReturnValue": "ClampedMultiplier"
+          }
+        ]
+      }
+    },
+    {
+      "FunctionName": "ClampRecoilOffset",
+      "ReturnType": "FVector2D",
+      "Parameters": [
+        {
+          "ParameterName": "Offset",
+          "ParameterType": "FVector2D"
+        }
+      ],
+      "Implementation": {
+        "Nodes": [
+          {
+            "NodeType": "BreakVector2D",
+            "Vector2D": "Offset",
+            "OutputPin": "X"
+          },
+          {
+            "NodeType": "BreakVector2D",
+            "Vector2D": "Offset",
+            "OutputPin": "Y"
+          },
+          {
+            "NodeType": "Clamp",
+            "Value": "X",
+            "Min": {
+              "NodeType": "Multiply",
+              "A": "MaxRecoilAccumulation",
+              "B": -1.0
+            },
+            "Max": "MaxRecoilAccumulation",
+            "OutputPin": "ClampedX"
+          },
+          {
+            "NodeType": "Clamp",
+            "Value": "Y",
+            "Min": 0.0,
+            "Max": "MaxRecoilAccumulation",
+            "OutputPin": "ClampedY"
+          },
+          {
+            "NodeType": "MakeVector2D",
+            "X": "ClampedX",
+            "Y": "ClampedY",
+            "OutputPin": "ClampedOffset"
+          },
+          {
+            "NodeType": "ReturnNode",
+            "ReturnValue": "ClampedOffset"
+          }
+        ]
+      }
+    },
+    {
+      "FunctionName": "IncrementRecoilIndex",
+      "ReturnType": "void",
+      "Parameters": [],
+      "Implementation": {
+        "Nodes": [
+          {
+            "NodeType": "Add",
+            "A": "CurrentRecoilIndex",
+            "B": 1,
+            "OutputPin": "NewIndex"
+          },
+          {
+            "NodeType": "Min",
+            "A": "NewIndex",
+            "B": {
+              "NodeType": "Subtract",
+              "A": {
+                "NodeType": "ArrayLength",
+                "Array": "RecoilPattern"
+              },
+              "B": 1
+            },
+            "OutputPin": "ClampedIndex"
+          },
+          {
+            "NodeType": "SetVariable",
+            "VariableName": "CurrentRecoilIndex",
+            "Value": "ClampedIndex"
+          }
+        ]
+      }
+    }
+  ]
+}

@@ -1,0 +1,260 @@
+{
+  "Type": "DataTable",
+  "Name": "DT_ItemsDatabase",
+  "Class": "UDataTable",
+  "Archetype": "DataTable'/Game/DataTables/DT_ItemsDatabase.DT_ItemsDatabase'",
+  "Properties": {
+    "RowStruct": {
+      "ObjectName": "ItemDataStruct",
+      "ObjectPath": "/Game/Blueprints/Data/ItemDataStruct"
+    }
+  },
+  "Rows": {
+    "Glock17": {
+      "ItemID": {
+        "Type": "FString",
+        "Value": "Glock17"
+      },
+      "ItemName": {
+        "Type": "FText",
+        "Value": {
+          "SourceString": "Glock 17",
+          "Key": "Items.Weapons.Glock17.Name",
+          "Namespace": "DDS2"
+        }
+      },
+      "ItemDescription": {
+        "Type": "FText",
+        "Value": {
+          "SourceString": "Spolehlivá služební pistole rakouské výroby. Oblíbená volba policistů a bezpečnostních složek po celém světě díky své jednoduchosti a spolehlivosti.",
+          "Key": "Items.Weapons.Glock17.Description",
+          "Namespace": "DDS2"
+        }
+      },
+      "ItemType": {
+        "Type": "EItemType",
+        "Value": "Weapon"
+      },
+      "ItemSubType": {
+        "Type": "EWeaponType",
+        "Value": "Pistol"
+      },
+      "ItemRarity": {
+        "Type": "EItemRarity",
+        "Value": "Common"
+      },
+      "ItemIcon": {
+        "Type": "TSoftObjectPtr<UTexture2D>",
+        "Value": "/Game/UI/Icons/Weapons/T_Glock17_Icon.T_Glock17_Icon"
+      },
+      "ItemMesh": {
+        "Type": "TSoftObjectPtr<UStaticMesh>",
+        "Value": "/Game/Meshes/Weapons/SM_Glock17.SM_Glock17"
+      },
+      "ItemWeight": {
+        "Type": "float",
+        "Value": 0.625
+      },
+      "BaseValue": {
+        "Type": "int32",
+        "Value": 800
+      },
+      "MaxStackSize": {
+        "Type": "int32",
+        "Value": 1
+      },
+      "bCanStack": {
+        "Type": "bool",
+        "Value": false
+      },
+      "bIsConsumable": {
+        "Type": "bool",
+        "Value": false
+      },
+      "bIsWeapon": {
+        "Type": "bool",
+        "Value": true
+      },
+      "bRequiresLicense": {
+        "Type": "bool",
+        "Value": true
+      },
+      "LicenseType": {
+        "Type": "ELicenseType",
+        "Value": "Firearms"
+      },
+      "LegalStatus": {
+        "Type": "ELegalStatus",
+        "Value": "Restricted"
+      },
+      "WeaponStats": {
+        "Type": "FWeaponStats",
+        "Value": {
+          "BaseDamage": {
+            "Type": "float",
+            "Value": 35.0
+          },
+          "DamageVariance": {
+            "Type": "float",
+            "Value": 7.0
+          },
+          "BaseAccuracy": {
+            "Type": "float",
+            "Value": 0.75
+          },
+          "EffectiveRange": {
+            "Type": "float",
+            "Value": 50.0
+          },
+          "MaxRange": {
+            "Type": "float",
+            "Value": 100.0
+          },
+          "FireRate": {
+            "Type": "float",
+            "Value": 400.0
+          },
+          "ReloadTime": {
+            "Type": "float",
+            "Value": 2.5
+          },
+          "MagazineSize": {
+            "Type": "int32",
+            "Value": 17
+          },
+          "AmmoType": {
+            "Type": "FString",
+            "Value": "9mm"
+          },
+          "RecoilPattern": {
+            "Type": "FVector2D",
+            "Value": {
+              "X": 2.5,
+              "Y": 8.0
+            }
+          },
+          "MuzzleVelocity": {
+            "Type": "float",
+            "Value": 375.0
+          },
+          "Penetration": {
+            "Type": "float",
+            "Value": 15.0
+          }
+        }
+      },
+      "DurabilityStats": {
+        "Type": "FDurabilityStats",
+        "Value": {
+          "MaxDurability": {
+            "Type": "float",
+            "Value": 100.0
+          },
+          "DurabilityLossPerShot": {
+            "Type": "float",
+            "Value": 0.1
+          },
+          "RepairCost": {
+            "Type": "int32",
+            "Value": 50
+          },
+          "bCanRepair": {
+            "Type": "bool",
+            "Value": true
+          }
+        }
+      },
+      "AudioAssets": {
+        "Type": "FWeaponAudioAssets",
+        "Value": {
+          "FireSound": {
+            "Type": "TSoftObjectPtr<USoundCue>",
+            "Value": "/Game/Audio/Weapons/SC_Glock17_Fire.SC_Glock17_Fire"
+          },
+          "ReloadSound": {
+            "Type": "TSoftObjectPtr<USoundCue>",
+            "Value": "/Game/Audio/Weapons/SC_Glock17_Reload.SC_Glock17_Reload"
+          },
+          "EmptySound": {
+            "Type": "TSoftObjectPtr<USoundCue>",
+            "Value": "/Game/Audio/Weapons/SC_Pistol_Empty.SC_Pistol_Empty"
+          },
+          "DrawSound": {
+            "Type": "TSoftObjectPtr<USoundCue>",
+            "Value": "/Game/Audio/Weapons/SC_Pistol_Draw.SC_Pistol_Draw"
+          }
+        }
+      },
+      "VisualEffects": {
+        "Type": "FWeaponVFXAssets",
+        "Value": {
+          "MuzzleFlash": {
+            "Type": "TSoftObjectPtr<UParticleSystem>",
+            "Value": "/Game/VFX/Weapons/P_Pistol_MuzzleFlash.P_Pistol_MuzzleFlash"
+          },
+          "ShellEjection": {
+            "Type": "TSoftObjectPtr<UParticleSystem>",
+            "Value": "/Game/VFX/Weapons/P_9mm_ShellEject.P_9mm_ShellEject"
+          },
+          "ImpactEffect": {
+            "Type": "TSoftObjectPtr<UParticleSystem>",
+            "Value": "/Game/VFX/Impacts/P_Bullet_Impact.P_Bullet_Impact"
+          }
+        }
+      },
+      "AnimationAssets": {
+        "Type": "FWeaponAnimAssets",
+        "Value": {
+          "IdleAnimation": {
+            "Type": "TSoftObjectPtr<UAnimSequence>",
+            "Value": "/Game/Animations/Weapons/Pistol/AS_Pistol_Idle.AS_Pistol_Idle"
+          },
+          "FireAnimation": {
+            "Type": "TSoftObjectPtr<UAnimSequence>",
+            "Value": "/Game/Animations/Weapons/Pistol/AS_Pistol_Fire.AS_Pistol_Fire"
+          },
+          "ReloadAnimation": {
+            "Type": "TSoftObjectPtr<UAnimSequence>",
+            "Value": "/Game/Animations/Weapons/Pistol/AS_Pistol_Reload.AS_Pistol_Reload"
+          },
+          "DrawAnimation": {
+            "Type": "TSoftObjectPtr<UAnimSequence>",
+            "Value": "/Game/Animations/Weapons/Pistol/AS_Pistol_Draw.AS_Pistol_Draw"
+          }
+        }
+      },
+      "ItemTags": {
+        "Type": "TArray<FGameplayTag>",
+        "Value": [
+          "Item.Weapon",
+          "Item.Weapon.Pistol",
+          "Item.Weapon.Firearm",
+          "Item.Legal.Restricted",
+          "Item.Origin.Austria",
+          "Item.Manufacturer.Glock"
+        ]
+      },
+      "UnlockRequirements": {
+        "Type": "FUnlockRequirements",
+        "Value": {
+          "MinLevel": {
+            "Type": "int32",
+            "Value": 1
+          },
+          "RequiredQuests": {
+            "Type": "TArray<FString>",
+            "Value": []
+          },
+          "RequiredReputation": {
+            "Type": "int32",
+            "Value": 0
+          },
+          "RequiredMoney": {
+            "Type": "int32",
+            "Value": 800
+          }
+        }
+      }
+    }
+  }
+}

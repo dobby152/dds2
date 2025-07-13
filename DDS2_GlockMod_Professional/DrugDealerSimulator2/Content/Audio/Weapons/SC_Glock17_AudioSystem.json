@@ -1,0 +1,294 @@
+{
+  "Type": "SoundCue",
+  "Name": "SC_Glock17_AudioSystem",
+  "Class": "USoundCue",
+  "Properties": {
+    "VolumeMultiplier": 1.0,
+    "PitchMultiplier": 1.0,
+    "AttenuationSettings": "/Game/Audio/Attenuation/AT_WeaponFire.AT_WeaponFire",
+    "SoundClassObject": "/Game/Audio/SoundClasses/SC_Weapons.SC_Weapons",
+    "bOverrideAttenuation": false,
+    "bSpatialize": true,
+    "bLooping": false,
+    "Duration": 5.0
+  },
+  "SoundNodes": [
+    {
+      "NodeType": "SoundNodeRandom",
+      "NodeName": "FireSoundRandomizer",
+      "Properties": {
+        "bRandomizeWithoutRepeats": true,
+        "Weights": [1.0, 0.8, 0.9, 0.7]
+      },
+      "Children": [
+        {
+          "NodeType": "SoundNodeWavePlayer",
+          "SoundWave": "/Game/Audio/Weapons/Raw/SW_Glock17_Fire_01.SW_Glock17_Fire_01",
+          "Properties": {
+            "bLooping": false,
+            "VolumeMultiplier": 1.0,
+            "PitchMultiplier": 1.0
+          }
+        },
+        {
+          "NodeType": "SoundNodeWavePlayer",
+          "SoundWave": "/Game/Audio/Weapons/Raw/SW_Glock17_Fire_02.SW_Glock17_Fire_02",
+          "Properties": {
+            "bLooping": false,
+            "VolumeMultiplier": 0.95,
+            "PitchMultiplier": 1.02
+          }
+        },
+        {
+          "NodeType": "SoundNodeWavePlayer",
+          "SoundWave": "/Game/Audio/Weapons/Raw/SW_Glock17_Fire_03.SW_Glock17_Fire_03",
+          "Properties": {
+            "bLooping": false,
+            "VolumeMultiplier": 1.05,
+            "PitchMultiplier": 0.98
+          }
+        },
+        {
+          "NodeType": "SoundNodeWavePlayer",
+          "SoundWave": "/Game/Audio/Weapons/Raw/SW_Glock17_Fire_04.SW_Glock17_Fire_04",
+          "Properties": {
+            "bLooping": false,
+            "VolumeMultiplier": 0.9,
+            "PitchMultiplier": 1.03
+          }
+        }
+      ]
+    },
+    {
+      "NodeType": "SoundNodeModulator",
+      "NodeName": "FireSoundModulator",
+      "Properties": {
+        "PitchMin": 0.95,
+        "PitchMax": 1.05,
+        "VolumeMin": 0.9,
+        "VolumeMax": 1.1
+      },
+      "Input": "FireSoundRandomizer"
+    },
+    {
+      "NodeType": "SoundNodeDelay",
+      "NodeName": "EchoDelay",
+      "Properties": {
+        "DelayMin": 0.1,
+        "DelayMax": 0.3
+      },
+      "Input": "FireSoundModulator"
+    },
+    {
+      "NodeType": "SoundNodeMixer",
+      "NodeName": "FireMixer",
+      "Properties": {
+        "InputVolume": [1.0, 0.3]
+      },
+      "Inputs": [
+        "FireSoundModulator",
+        "EchoDelay"
+      ]
+    }
+  ],
+  "OutputNode": "FireMixer"
+}
+
+{
+  "Type": "SoundCue",
+  "Name": "SC_Glock17_Reload",
+  "Class": "USoundCue",
+  "Properties": {
+    "VolumeMultiplier": 0.8,
+    "PitchMultiplier": 1.0,
+    "AttenuationSettings": "/Game/Audio/Attenuation/AT_WeaponReload.AT_WeaponReload",
+    "SoundClassObject": "/Game/Audio/SoundClasses/SC_Weapons.SC_Weapons",
+    "bSpatialize": true,
+    "Duration": 3.0
+  },
+  "SoundNodes": [
+    {
+      "NodeType": "SoundNodeConcatenator",
+      "NodeName": "ReloadSequence",
+      "Properties": {
+        "InputVolume": [1.0, 1.0, 1.0, 1.0, 1.0]
+      },
+      "Inputs": [
+        {
+          "NodeType": "SoundNodeWavePlayer",
+          "SoundWave": "/Game/Audio/Weapons/Raw/SW_Glock17_MagRelease.SW_Glock17_MagRelease",
+          "Properties": {
+            "VolumeMultiplier": 0.9
+          }
+        },
+        {
+          "NodeType": "SoundNodeDelay",
+          "Properties": {
+            "DelayMin": 0.2,
+            "DelayMax": 0.2
+          },
+          "Input": {
+            "NodeType": "SoundNodeWavePlayer",
+            "SoundWave": "/Game/Audio/Weapons/Raw/SW_Glock17_MagOut.SW_Glock17_MagOut"
+          }
+        },
+        {
+          "NodeType": "SoundNodeDelay",
+          "Properties": {
+            "DelayMin": 0.8,
+            "DelayMax": 0.8
+          },
+          "Input": {
+            "NodeType": "SoundNodeWavePlayer",
+            "SoundWave": "/Game/Audio/Weapons/Raw/SW_Glock17_MagGrab.SW_Glock17_MagGrab"
+          }
+        },
+        {
+          "NodeType": "SoundNodeDelay",
+          "Properties": {
+            "DelayMin": 1.2,
+            "DelayMax": 1.2
+          },
+          "Input": {
+            "NodeType": "SoundNodeWavePlayer",
+            "SoundWave": "/Game/Audio/Weapons/Raw/SW_Glock17_MagIn.SW_Glock17_MagIn"
+          }
+        },
+        {
+          "NodeType": "SoundNodeDelay",
+          "Properties": {
+            "DelayMin": 1.8,
+            "DelayMax": 1.8
+          },
+          "Input": {
+            "NodeType": "SoundNodeWavePlayer",
+            "SoundWave": "/Game/Audio/Weapons/Raw/SW_Glock17_SlideRelease.SW_Glock17_SlideRelease"
+          }
+        }
+      ]
+    }
+  ],
+  "OutputNode": "ReloadSequence"
+}
+
+{
+  "Type": "SoundCue",
+  "Name": "SC_Glock17_Empty",
+  "Class": "USoundCue",
+  "Properties": {
+    "VolumeMultiplier": 0.6,
+    "PitchMultiplier": 1.0,
+    "AttenuationSettings": "/Game/Audio/Attenuation/AT_WeaponEmpty.AT_WeaponEmpty",
+    "SoundClassObject": "/Game/Audio/SoundClasses/SC_Weapons.SC_Weapons",
+    "bSpatialize": true,
+    "Duration": 0.5
+  },
+  "SoundNodes": [
+    {
+      "NodeType": "SoundNodeRandom",
+      "NodeName": "EmptyClickRandomizer",
+      "Properties": {
+        "bRandomizeWithoutRepeats": false,
+        "Weights": [1.0, 0.8, 0.9]
+      },
+      "Children": [
+        {
+          "NodeType": "SoundNodeWavePlayer",
+          "SoundWave": "/Game/Audio/Weapons/Raw/SW_Glock17_Empty_01.SW_Glock17_Empty_01"
+        },
+        {
+          "NodeType": "SoundNodeWavePlayer",
+          "SoundWave": "/Game/Audio/Weapons/Raw/SW_Glock17_Empty_02.SW_Glock17_Empty_02"
+        },
+        {
+          "NodeType": "SoundNodeWavePlayer",
+          "SoundWave": "/Game/Audio/Weapons/Raw/SW_Glock17_Empty_03.SW_Glock17_Empty_03"
+        }
+      ]
+    },
+    {
+      "NodeType": "SoundNodeModulator",
+      "Properties": {
+        "PitchMin": 0.9,
+        "PitchMax": 1.1,
+        "VolumeMin": 0.8,
+        "VolumeMax": 1.0
+      },
+      "Input": "EmptyClickRandomizer"
+    }
+  ]
+}
+
+{
+  "Type": "SoundCue",
+  "Name": "SC_Glock17_Draw",
+  "Class": "USoundCue",
+  "Properties": {
+    "VolumeMultiplier": 0.7,
+    "PitchMultiplier": 1.0,
+    "AttenuationSettings": "/Game/Audio/Attenuation/AT_WeaponDraw.AT_WeaponDraw",
+    "SoundClassObject": "/Game/Audio/SoundClasses/SC_Weapons.SC_Weapons",
+    "bSpatialize": true,
+    "Duration": 1.0
+  },
+  "SoundNodes": [
+    {
+      "NodeType": "SoundNodeConcatenator",
+      "NodeName": "DrawSequence",
+      "Inputs": [
+        {
+          "NodeType": "SoundNodeWavePlayer",
+          "SoundWave": "/Game/Audio/Weapons/Raw/SW_Glock17_Holster_Out.SW_Glock17_Holster_Out"
+        },
+        {
+          "NodeType": "SoundNodeDelay",
+          "Properties": {
+            "DelayMin": 0.3,
+            "DelayMax": 0.3
+          },
+          "Input": {
+            "NodeType": "SoundNodeWavePlayer",
+            "SoundWave": "/Game/Audio/Weapons/Raw/SW_Glock17_Safety_Off.SW_Glock17_Safety_Off"
+          }
+        }
+      ]
+    }
+  ]
+}
+
+{
+  "Type": "SoundCue",
+  "Name": "SC_Glock17_Holster",
+  "Class": "USoundCue",
+  "Properties": {
+    "VolumeMultiplier": 0.6,
+    "PitchMultiplier": 1.0,
+    "AttenuationSettings": "/Game/Audio/Attenuation/AT_WeaponDraw.AT_WeaponDraw",
+    "SoundClassObject": "/Game/Audio/SoundClasses/SC_Weapons.SC_Weapons",
+    "bSpatialize": true,
+    "Duration": 0.8
+  },
+  "SoundNodes": [
+    {
+      "NodeType": "SoundNodeConcatenator",
+      "NodeName": "HolsterSequence",
+      "Inputs": [
+        {
+          "NodeType": "SoundNodeWavePlayer",
+          "SoundWave": "/Game/Audio/Weapons/Raw/SW_Glock17_Safety_On.SW_Glock17_Safety_On"
+        },
+        {
+          "NodeType": "SoundNodeDelay",
+          "Properties": {
+            "DelayMin": 0.2,
+            "DelayMax": 0.2
+          },
+          "Input": {
+            "NodeType": "SoundNodeWavePlayer",
+            "SoundWave": "/Game/Audio/Weapons/Raw/SW_Glock17_Holster_In.SW_Glock17_Holster_In"
+          }
+        }
+      ]
+    }
+  ]
+}

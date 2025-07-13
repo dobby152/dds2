@@ -1,0 +1,35 @@
+{
+  "BlackMarket_Weapons": {
+    "ShopID": "BlackMarket",
+    "Category": "Weapons",
+    "Items": [
+      {
+        "ItemID": "glock17",
+        "SpawnChance": 0.6,
+        "MinQuantity": 1,
+        "MaxQuantity": 2,
+        "BasePrice": 800,
+        "PriceVariation": 0.2,
+        "RestockTime": 24,
+        "RequiredReputation": 0
+      }
+    ]
+  },
+  "GunShop_Pistols": {
+    "ShopID": "GunShop",
+    "Category": "Pistols",
+    "Items": [
+      {
+        "ItemID": "glock17",
+        "SpawnChance": 0.8,
+        "MinQuantity": 1,
+        "MaxQuantity": 3,
+        "BasePrice": 800,
+        "PriceVariation": 0.1,
+        "RestockTime": 48,
+        "RequiredReputation": 0,
+        "RequiredLicense": "FirearmLicense"
+      }
+    ]
+  }
+}

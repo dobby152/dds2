@@ -1,0 +1,688 @@
+{
+  "Type": "Blueprint",
+  "Name": "BP_PlayerInventoryManager_Glock",
+  "Class": "UBlueprint",
+  "ParentClass": "/Game/Blueprints/Player/BP_PlayerInventoryManagerBase.BP_PlayerInventoryManagerBase_C",
+  "BlueprintType": "BPTYPE_Normal",
+  "Properties": {
+    "bGlockAutoGiven": {
+      "Type": "bool",
+      "Value": false
+    },
+    "bAmmoAutoGiven": {
+      "Type": "bool",
+      "Value": false
+    },
+    "GlockItemID": {
+      "Type": "FString",
+      "Value": "Glock17"
+    },
+    "AmmoItemID": {
+      "Type": "FString",
+      "Value": "9mm_Parabellum"
+    },
+    "StartingAmmoAmount": {
+      "Type": "int32",
+      "Value": 100
+    },
+    "MinAmmoThreshold": {
+      "Type": "int32",
+      "Value": 20
+    },
+    "AmmoRefillAmount": {
+      "Type": "int32",
+      "Value": 50
+    },
+    "bDebugMode": {
+      "Type": "bool",
+      "Value": false
+    }
+  },
+  "EventGraph": {
+    "Events": [
+      {
+        "EventName": "BeginPlay",
+        "EventType": "ActorBeginPlay",
+        "Nodes": [
+          {
+            "NodeType": "CallFunction",
+            "FunctionName": "InitializeGlockInventory"
+          }
+        ]
+      },
+      {
+        "EventName": "OnPlayerSpawned",
+        "EventType": "CustomEvent",
+        "Nodes": [
+          {
+            "NodeType": "CallFunction",
+            "FunctionName": "EnsureGlockInInventory"
+          }
+        ]
+      },
+      {
+        "EventName": "OnGameLoaded",
+        "EventType": "CustomEvent",
+        "Nodes": [
+          {
+            "NodeType": "CallFunction",
+            "FunctionName": "EnsureGlockInInventory"
+          }
+        ]
+      },
+      {
+        "EventName": "OnInventoryChanged",
+        "EventType": "CustomEvent",
+        "Nodes": [
+          {
+            "NodeType": "CallFunction",
+            "FunctionName": "CheckGlockPresence"
+          }
+        ]
+      },
+      {
+        "EventName": "Tick",
+        "EventType": "ActorTick",
+        "Nodes": [
+          {
+            "NodeType": "Branch",
+            "Condition": "bDebugMode",
+            "TrueExec": [
+              {
+                "NodeType": "CallFunction",
+                "FunctionName": "DebugInventoryCheck"
+              }
+            ]
+          }
+        ]
+      }
+    ],
+    "Functions": [
+      {
+        "FunctionName": "InitializeGlockInventory",
+        "ReturnType": "void",
+        "Parameters": [],
+        "Implementation": {
+          "Nodes": [
+            {
+              "NodeType": "PrintString",
+              "String": "[Glock Mod] Inicializuji Glock inventář...",
+              "PrintToLog": true
+            },
+            {
+              "NodeType": "Delay",
+              "Duration": 1.0,
+              "OutputExec": [
+                {
+                  "NodeType": "CallFunction",
+                  "FunctionName": "EnsureGlockInInventory"
+                }
+              ]
+            }
+          ]
+        }
+      },
+      {
+        "FunctionName": "EnsureGlockInInventory",
+        "ReturnType": "void",
+        "Parameters": [],
+        "Implementation": {
+          "Nodes": [
+            {
+              "NodeType": "GetPlayerController",
+              "OutputPin": "PlayerController"
+            },
+            {
+              "NodeType": "GetPawn",
+              "Target": "PlayerController",
+              "OutputPin": "PlayerPawn"
+            },
+            {
+              "NodeType": "Cast",
+              "Object": "PlayerPawn",
+              "Class": "BP_PlayerCharacter_C",
+              "OutputPin": "PlayerCharacter"
+            },
+            {
+              "NodeType": "Branch",
+              "Condition": {
+                "NodeType": "IsValid",
+                "Object": "PlayerCharacter"
+              },
+              "TrueExec": [
+                {
+                  "NodeType": "CallFunction",
+                  "FunctionName": "GetPlayerInventoryComponent",
+                  "Target": "PlayerCharacter",
+                  "OutputPin": "InventoryComponent"
+                },
+                {
+                  "NodeType": "Branch",
+                  "Condition": {
+                    "NodeType": "IsValid",
+                    "Object": "InventoryComponent"
+                  },
+                  "TrueExec": [
+                    {
+                      "NodeType": "CallFunction",
+                      "FunctionName": "CheckAndAddGlock",
+                      "Parameters": ["InventoryComponent"]
+                    },
+                    {
+                      "NodeType": "CallFunction",
+                      "FunctionName": "CheckAndAddAmmo",
+                      "Parameters": ["InventoryComponent"]
+                    }
+                  ],
+                  "FalseExec": [
+                    {
+                      "NodeType": "PrintString",
+                      "String": "[Glock Mod] CHYBA: Inventář komponenta nenalezena!",
+                      "TextColor": {"R": 1.0, "G": 0.0, "B": 0.0, "A": 1.0},
+                      "PrintToLog": true
+                    }
+                  ]
+                }
+              ],
+              "FalseExec": [
+                {
+                  "NodeType": "PrintString",
+                  "String": "[Glock Mod] CHYBA: Hráč nenalezen!",
+                  "TextColor": {"R": 1.0, "G": 0.0, "B": 0.0, "A": 1.0},
+                  "PrintToLog": true
+                }
+              ]
+            }
+          ]
+        }
+      },
+      {
+        "FunctionName": "CheckAndAddGlock",
+        "ReturnType": "void",
+        "Parameters": [
+          {
+            "ParameterName": "InventoryComponent",
+            "ParameterType": "UInventoryComponent"
+          }
+        ],
+        "Implementation": {
+          "Nodes": [
+            {
+              "NodeType": "CallFunction",
+              "FunctionName": "HasItem",
+              "Target": "InventoryComponent",
+              "Parameters": ["GlockItemID"],
+              "OutputPin": "bHasGlock"
+            },
+            {
+              "NodeType": "Branch",
+              "Condition": "bHasGlock",
+              "TrueExec": [
+                {
+                  "NodeType": "Branch",
+                  "Condition": "bDebugMode",
+                  "TrueExec": [
+                    {
+                      "NodeType": "PrintString",
+                      "String": "[Glock Mod] Glock již v inventáři - OK",
+                      "TextColor": {"R": 0.0, "G": 1.0, "B": 0.0, "A": 1.0},
+                      "PrintToLog": true
+                    }
+                  ]
+                }
+              ],
+              "FalseExec": [
+                {
+                  "NodeType": "CallFunction",
+                  "FunctionName": "AddGlockToInventory",
+                  "Parameters": ["InventoryComponent"]
+                }
+              ]
+            }
+          ]
+        }
+      },
+      {
+        "FunctionName": "AddGlockToInventory",
+        "ReturnType": "void",
+        "Parameters": [
+          {
+            "ParameterName": "InventoryComponent",
+            "ParameterType": "UInventoryComponent"
+          }
+        ],
+        "Implementation": {
+          "Nodes": [
+            {
+              "NodeType": "PrintString",
+              "String": "[Glock Mod] Přidávám Glock 17 do inventáře...",
+              "TextColor": {"R": 0.0, "G": 0.8, "B": 1.0, "A": 1.0},
+              "PrintToLog": true
+            },
+            {
+              "NodeType": "CallFunction",
+              "FunctionName": "CreateItemInstance",
+              "Parameters": [
+                "GlockItemID",
+                1,
+                100.0
+              ],
+              "OutputPin": "GlockItem"
+            },
+            {
+              "NodeType": "Branch",
+              "Condition": {
+                "NodeType": "IsValid",
+                "Object": "GlockItem"
+              },
+              "TrueExec": [
+                {
+                  "NodeType": "CallFunction",
+                  "FunctionName": "AddItemToInventory",
+                  "Target": "InventoryComponent",
+                  "Parameters": ["GlockItem"],
+                  "OutputPin": "bAddSuccess"
+                },
+                {
+                  "NodeType": "Branch",
+                  "Condition": "bAddSuccess",
+                  "TrueExec": [
+                    {
+                      "NodeType": "SetVariable",
+                      "VariableName": "bGlockAutoGiven",
+                      "Value": true
+                    },
+                    {
+                      "NodeType": "PrintString",
+                      "String": "[Glock Mod] ✓ Glock 17 úspěšně přidán!",
+                      "TextColor": {"R": 0.0, "G": 1.0, "B": 0.0, "A": 1.0},
+                      "PrintToLog": true
+                    },
+                    {
+                      "NodeType": "CallFunction",
+                      "FunctionName": "ShowGlockNotification"
+                    },
+                    {
+                      "NodeType": "CallFunction",
+                      "FunctionName": "PlayGlockAcquiredSound"
+                    }
+                  ],
+                  "FalseExec": [
+                    {
+                      "NodeType": "PrintString",
+                      "String": "[Glock Mod] ✗ Chyba při přidávání Glocku!",
+                      "TextColor": {"R": 1.0, "G": 0.0, "B": 0.0, "A": 1.0},
+                      "PrintToLog": true
+                    },
+                    {
+                      "NodeType": "CallFunction",
+                      "FunctionName": "RetryAddGlock",
+                      "Parameters": ["InventoryComponent"]
+                    }
+                  ]
+                }
+              ],
+              "FalseExec": [
+                {
+                  "NodeType": "PrintString",
+                  "String": "[Glock Mod] ✗ Chyba při vytváření Glock instance!",
+                  "TextColor": {"R": 1.0, "G": 0.0, "B": 0.0, "A": 1.0},
+                  "PrintToLog": true
+                }
+              ]
+            }
+          ]
+        }
+      },
+      {
+        "FunctionName": "CheckAndAddAmmo",
+        "ReturnType": "void",
+        "Parameters": [
+          {
+            "ParameterName": "InventoryComponent",
+            "ParameterType": "UInventoryComponent"
+          }
+        ],
+        "Implementation": {
+          "Nodes": [
+            {
+              "NodeType": "CallFunction",
+              "FunctionName": "GetItemQuantity",
+              "Target": "InventoryComponent",
+              "Parameters": ["AmmoItemID"],
+              "OutputPin": "CurrentAmmoCount"
+            },
+            {
+              "NodeType": "Branch",
+              "Condition": {
+                "NodeType": "LessThan",
+                "A": "CurrentAmmoCount",
+                "B": "MinAmmoThreshold"
+              },
+              "TrueExec": [
+                {
+                  "NodeType": "CallFunction",
+                  "FunctionName": "AddAmmoToInventory",
+                  "Parameters": ["InventoryComponent", "CurrentAmmoCount"]
+                }
+              ],
+              "FalseExec": [
+                {
+                  "NodeType": "Branch",
+                  "Condition": {
+                    "NodeType": "And",
+                    "A": {
+                      "NodeType": "Equal",
+                      "A": "CurrentAmmoCount",
+                      "B": 0
+                    },
+                    "B": {
+                      "NodeType": "Not",
+                      "Input": "bAmmoAutoGiven"
+                    }
+                  },
+                  "TrueExec": [
+                    {
+                      "NodeType": "CallFunction",
+                      "FunctionName": "AddAmmoToInventory",
+                      "Parameters": ["InventoryComponent", 0]
+                    }
+                  ]
+                }
+              ]
+            }
+          ]
+        }
+      },
+      {
+        "FunctionName": "AddAmmoToInventory",
+        "ReturnType": "void",
+        "Parameters": [
+          {
+            "ParameterName": "InventoryComponent",
+            "ParameterType": "UInventoryComponent"
+          },
+          {
+            "ParameterName": "CurrentAmount",
+            "ParameterType": "int32"
+          }
+        ],
+        "Implementation": {
+          "Nodes": [
+            {
+              "NodeType": "Select",
+              "Condition": {
+                "NodeType": "Equal",
+                "A": "CurrentAmount",
+                "B": 0
+              },
+              "TrueValue": "StartingAmmoAmount",
+              "FalseValue": "AmmoRefillAmount",
+              "OutputPin": "AmmoToAdd"
+            },
+            {
+              "NodeType": "PrintString",
+              "String": {
+                "NodeType": "Format",
+                "FormatText": "[Glock Mod] Přidávám {0} nábojů 9mm...",
+                "Arguments": ["AmmoToAdd"]
+              },
+              "TextColor": {"R": 0.0, "G": 0.8, "B": 1.0, "A": 1.0},
+              "PrintToLog": true
+            },
+            {
+              "NodeType": "CallFunction",
+              "FunctionName": "CreateItemInstance",
+              "Parameters": [
+                "AmmoItemID",
+                "AmmoToAdd",
+                100.0
+              ],
+              "OutputPin": "AmmoItem"
+            },
+            {
+              "NodeType": "Branch",
+              "Condition": {
+                "NodeType": "IsValid",
+                "Object": "AmmoItem"
+              },
+              "TrueExec": [
+                {
+                  "NodeType": "CallFunction",
+                  "FunctionName": "AddItemToInventory",
+                  "Target": "InventoryComponent",
+                  "Parameters": ["AmmoItem"],
+                  "OutputPin": "bAddSuccess"
+                },
+                {
+                  "NodeType": "Branch",
+                  "Condition": "bAddSuccess",
+                  "TrueExec": [
+                    {
+                      "NodeType": "SetVariable",
+                      "VariableName": "bAmmoAutoGiven",
+                      "Value": true
+                    },
+                    {
+                      "NodeType": "PrintString",
+                      "String": {
+                        "NodeType": "Format",
+                        "FormatText": "[Glock Mod] ✓ Přidáno {0} nábojů 9mm!",
+                        "Arguments": ["AmmoToAdd"]
+                      },
+                      "TextColor": {"R": 0.0, "G": 1.0, "B": 0.0, "A": 1.0},
+                      "PrintToLog": true
+                    }
+                  ],
+                  "FalseExec": [
+                    {
+                      "NodeType": "PrintString",
+                      "String": "[Glock Mod] ✗ Chyba při přidávání munice!",
+                      "TextColor": {"R": 1.0, "G": 0.0, "B": 0.0, "A": 1.0},
+                      "PrintToLog": true
+                    }
+                  ]
+                }
+              ]
+            }
+          ]
+        }
+      },
+      {
+        "FunctionName": "CheckGlockPresence",
+        "ReturnType": "void",
+        "Parameters": [],
+        "Implementation": {
+          "Nodes": [
+            {
+              "NodeType": "GetPlayerController",
+              "OutputPin": "PlayerController"
+            },
+            {
+              "NodeType": "GetPawn",
+              "Target": "PlayerController",
+              "OutputPin": "PlayerPawn"
+            },
+            {
+              "NodeType": "Cast",
+              "Object": "PlayerPawn",
+              "Class": "BP_PlayerCharacter_C",
+              "OutputPin": "PlayerCharacter"
+            },
+            {
+              "NodeType": "CallFunction",
+              "FunctionName": "GetPlayerInventoryComponent",
+              "Target": "PlayerCharacter",
+              "OutputPin": "InventoryComponent"
+            },
+            {
+              "NodeType": "CallFunction",
+              "FunctionName": "HasItem",
+              "Target": "InventoryComponent",
+              "Parameters": ["GlockItemID"],
+              "OutputPin": "bHasGlock"
+            },
+            {
+              "NodeType": "Branch",
+              "Condition": {
+                "NodeType": "And",
+                "A": {
+                  "NodeType": "Not",
+                  "Input": "bHasGlock"
+                },
+                "B": "bGlockAutoGiven"
+              },
+              "TrueExec": [
+                {
+                  "NodeType": "PrintString",
+                  "String": "[Glock Mod] ⚠ Glock zmizel z inventáře! Obnovuji...",
+                  "TextColor": {"R": 1.0, "G": 0.5, "B": 0.0, "A": 1.0},
+                  "PrintToLog": true
+                },
+                {
+                  "NodeType": "CallFunction",
+                  "FunctionName": "AddGlockToInventory",
+                  "Parameters": ["InventoryComponent"]
+                }
+              ]
+            }
+          ]
+        }
+      },
+      {
+        "FunctionName": "ShowGlockNotification",
+        "ReturnType": "void",
+        "Parameters": [],
+        "Implementation": {
+          "Nodes": [
+            {
+              "NodeType": "CallFunction",
+              "FunctionName": "ShowNotificationToPlayer",
+              "Parameters": [
+                {
+                  "NodeType": "MakeText",
+                  "Text": "Glock 17 přidán do inventáře!"
+                },
+                {
+                  "NodeType": "MakeText",
+                  "Text": "Nová zbraň je nyní k dispozici"
+                },
+                "/Game/UI/Icons/Weapons/T_Glock17_Icon.T_Glock17_Icon",
+                5.0,
+                "Success"
+              ]
+            }
+          ]
+        }
+      },
+      {
+        "FunctionName": "PlayGlockAcquiredSound",
+        "ReturnType": "void",
+        "Parameters": [],
+        "Implementation": {
+          "Nodes": [
+            {
+              "NodeType": "PlaySound2D",
+              "Sound": "/Game/Audio/UI/SC_ItemAcquired.SC_ItemAcquired",
+              "VolumeMultiplier": 0.8,
+              "PitchMultiplier": 1.0
+            }
+          ]
+        }
+      },
+      {
+        "FunctionName": "RetryAddGlock",
+        "ReturnType": "void",
+        "Parameters": [
+          {
+            "ParameterName": "InventoryComponent",
+            "ParameterType": "UInventoryComponent"
+          }
+        ],
+        "Implementation": {
+          "Nodes": [
+            {
+              "NodeType": "PrintString",
+              "String": "[Glock Mod] Zkouším znovu za 2 sekundy...",
+              "TextColor": {"R": 1.0, "G": 0.5, "B": 0.0, "A": 1.0},
+              "PrintToLog": true
+            },
+            {
+              "NodeType": "Delay",
+              "Duration": 2.0,
+              "OutputExec": [
+                {
+                  "NodeType": "CallFunction",
+                  "FunctionName": "AddGlockToInventory",
+                  "Parameters": ["InventoryComponent"]
+                }
+              ]
+            }
+          ]
+        }
+      },
+      {
+        "FunctionName": "DebugInventoryCheck",
+        "ReturnType": "void",
+        "Parameters": [],
+        "Implementation": {
+          "Nodes": [
+            {
+              "NodeType": "GetPlayerController",
+              "OutputPin": "PlayerController"
+            },
+            {
+              "NodeType": "GetPawn",
+              "Target": "PlayerController",
+              "OutputPin": "PlayerPawn"
+            },
+            {
+              "NodeType": "Cast",
+              "Object": "PlayerPawn",
+              "Class": "BP_PlayerCharacter_C",
+              "OutputPin": "PlayerCharacter"
+            },
+            {
+              "NodeType": "CallFunction",
+              "FunctionName": "GetPlayerInventoryComponent",
+              "Target": "PlayerCharacter",
+              "OutputPin": "InventoryComponent"
+            },
+            {
+              "NodeType": "CallFunction",
+              "FunctionName": "HasItem",
+              "Target": "InventoryComponent",
+              "Parameters": ["GlockItemID"],
+              "OutputPin": "bHasGlock"
+            },
+            {
+              "NodeType": "CallFunction",
+              "FunctionName": "GetItemQuantity",
+              "Target": "InventoryComponent",
+              "Parameters": ["AmmoItemID"],
+              "OutputPin": "AmmoCount"
+            },
+            {
+              "NodeType": "PrintString",
+              "String": {
+                "NodeType": "Format",
+                "FormatText": "[DEBUG] Glock: {0}, Munice: {1}",
+                "Arguments": [
+                  {
+                    "NodeType": "Select",
+                    "Condition": "bHasGlock",
+                    "TrueValue": "ANO",
+                    "FalseValue": "NE"
+                  },
+                  "AmmoCount"
+                ]
+              },
+              "Duration": 0.1,
+              "PrintToLog": false
+            }
+          ]
+        }
+      }
+    ]
+  }
+}

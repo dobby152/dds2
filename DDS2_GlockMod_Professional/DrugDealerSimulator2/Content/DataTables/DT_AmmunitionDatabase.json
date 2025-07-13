@@ -1,0 +1,279 @@
+{
+  "Type": "DataTable",
+  "Name": "DT_AmmunitionDatabase",
+  "Class": "UDataTable",
+  "Archetype": "DataTable'/Game/DataTables/DT_AmmunitionDatabase.DT_AmmunitionDatabase'",
+  "Properties": {
+    "RowStruct": {
+      "ObjectName": "AmmunitionDataStruct",
+      "ObjectPath": "/Game/Blueprints/Data/AmmunitionDataStruct"
+    }
+  },
+  "Rows": {
+    "9mm_Parabellum": {
+      "AmmoID": {
+        "Type": "FString",
+        "Value": "9mm"
+      },
+      "AmmoName": {
+        "Type": "FText",
+        "Value": {
+          "SourceString": "9mm Parabellum",
+          "Key": "Items.Ammo.9mm.Name",
+          "Namespace": "DDS2"
+        }
+      },
+      "AmmoDescription": {
+        "Type": "FText",
+        "Value": {
+          "SourceString": "Standardní pistolová munice 9×19mm. Nejpoužívanější pistolová munice na světě, vyvinutá v roce 1902 německou firmou DWM.",
+          "Key": "Items.Ammo.9mm.Description",
+          "Namespace": "DDS2"
+        }
+      },
+      "AmmoType": {
+        "Type": "EAmmoType",
+        "Value": "Pistol"
+      },
+      "AmmoCategory": {
+        "Type": "EAmmoCategory",
+        "Value": "SmallCaliber"
+      },
+      "AmmoIcon": {
+        "Type": "TSoftObjectPtr<UTexture2D>",
+        "Value": "/Game/UI/Icons/Ammo/T_9mm_Icon.T_9mm_Icon"
+      },
+      "AmmoMesh": {
+        "Type": "TSoftObjectPtr<UStaticMesh>",
+        "Value": "/Game/Meshes/Ammo/SM_9mm_Bullet.SM_9mm_Bullet"
+      },
+      "AmmoWeight": {
+        "Type": "float",
+        "Value": 0.012
+      },
+      "BaseValue": {
+        "Type": "int32",
+        "Value": 2
+      },
+      "MaxStackSize": {
+        "Type": "int32",
+        "Value": 100
+      },
+      "bCanStack": {
+        "Type": "bool",
+        "Value": true
+      },
+      "LegalStatus": {
+        "Type": "ELegalStatus",
+        "Value": "Restricted"
+      },
+      "bRequiresLicense": {
+        "Type": "bool",
+        "Value": true
+      },
+      "LicenseType": {
+        "Type": "ELicenseType",
+        "Value": "Firearms"
+      },
+      "BallisticProperties": {
+        "Type": "FBallisticProperties",
+        "Value": {
+          "DamageMultiplier": {
+            "Type": "float",
+            "Value": 1.0
+          },
+          "AccuracyMultiplier": {
+            "Type": "float",
+            "Value": 1.0
+          },
+          "RangeMultiplier": {
+            "Type": "float",
+            "Value": 1.0
+          },
+          "PenetrationMultiplier": {
+            "Type": "float",
+            "Value": 1.0
+          },
+          "RecoilMultiplier": {
+            "Type": "float",
+            "Value": 1.0
+          },
+          "MuzzleVelocity": {
+            "Type": "float",
+            "Value": 375.0
+          },
+          "BulletDrop": {
+            "Type": "float",
+            "Value": 0.15
+          },
+          "AirResistance": {
+            "Type": "float",
+            "Value": 0.02
+          }
+        }
+      },
+      "CompatibleWeapons": {
+        "Type": "TArray<FString>",
+        "Value": [
+          "Glock17",
+          "Glock19",
+          "Beretta92",
+          "MP5",
+          "UZI"
+        ]
+      },
+      "AmmoVariants": {
+        "Type": "TArray<FAmmoVariant>",
+        "Value": [
+          {
+            "VariantName": {
+              "Type": "FString",
+              "Value": "FMJ"
+            },
+            "VariantDescription": {
+              "Type": "FText",
+              "Value": {
+                "SourceString": "Full Metal Jacket - Standardní munice",
+                "Key": "Items.Ammo.9mm.FMJ.Description",
+                "Namespace": "DDS2"
+              }
+            },
+            "DamageModifier": {
+              "Type": "float",
+              "Value": 1.0
+            },
+            "PenetrationModifier": {
+              "Type": "float",
+              "Value": 1.0
+            },
+            "PriceModifier": {
+              "Type": "float",
+              "Value": 1.0
+            }
+          },
+          {
+            "VariantName": {
+              "Type": "FString",
+              "Value": "HP"
+            },
+            "VariantDescription": {
+              "Type": "FText",
+              "Value": {
+                "SourceString": "Hollow Point - Zvýšené poškození",
+                "Key": "Items.Ammo.9mm.HP.Description",
+                "Namespace": "DDS2"
+              }
+            },
+            "DamageModifier": {
+              "Type": "float",
+              "Value": 1.25
+            },
+            "PenetrationModifier": {
+              "Type": "float",
+              "Value": 0.7
+            },
+            "PriceModifier": {
+              "Type": "float",
+              "Value": 1.5
+            }
+          },
+          {
+            "VariantName": {
+              "Type": "FString",
+              "Value": "AP"
+            },
+            "VariantDescription": {
+              "Type": "FText",
+              "Value": {
+                "SourceString": "Armor Piercing - Zvýšená penetrace",
+                "Key": "Items.Ammo.9mm.AP.Description",
+                "Namespace": "DDS2"
+              }
+            },
+            "DamageModifier": {
+              "Type": "float",
+              "Value": 0.9
+            },
+            "PenetrationModifier": {
+              "Type": "float",
+              "Value": 1.8
+            },
+            "PriceModifier": {
+              "Type": "float",
+              "Value": 2.0
+            }
+          }
+        ]
+      },
+      "ItemTags": {
+        "Type": "TArray<FGameplayTag>",
+        "Value": [
+          "Item.Ammo",
+          "Item.Ammo.Pistol",
+          "Item.Ammo.9mm",
+          "Item.Legal.Restricted",
+          "Item.Stackable"
+        ]
+      },
+      "QualityGrades": {
+        "Type": "TArray<FQualityGrade>",
+        "Value": [
+          {
+            "GradeName": {
+              "Type": "FString",
+              "Value": "Military"
+            },
+            "QualityMultiplier": {
+              "Type": "float",
+              "Value": 1.2
+            },
+            "ReliabilityBonus": {
+              "Type": "float",
+              "Value": 0.05
+            },
+            "PriceMultiplier": {
+              "Type": "float",
+              "Value": 1.3
+            }
+          },
+          {
+            "GradeName": {
+              "Type": "FString",
+              "Value": "Commercial"
+            },
+            "QualityMultiplier": {
+              "Type": "float",
+              "Value": 1.0
+            },
+            "ReliabilityBonus": {
+              "Type": "float",
+              "Value": 0.0
+            },
+            "PriceMultiplier": {
+              "Type": "float",
+              "Value": 1.0
+            }
+          },
+          {
+            "GradeName": {
+              "Type": "FString",
+              "Value": "Surplus"
+            },
+            "QualityMultiplier": {
+              "Type": "float",
+              "Value": 0.8
+            },
+            "ReliabilityBonus": {
+              "Type": "float",
+              "Value": -0.1
+            },
+            "PriceMultiplier": {
+              "Type": "float",
+              "Value": 0.7
+            }
+          }
+        ]
+      }
+    }
+  }
+}

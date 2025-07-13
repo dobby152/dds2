@@ -1,0 +1,572 @@
+{
+  "Type": "AnimationBlueprint",
+  "Name": "ABP_Glock17",
+  "Class": "UAnimBlueprint",
+  "ParentClass": "/Game/Animations/Weapons/ABP_WeaponBase.ABP_WeaponBase_C",
+  "TargetSkeleton": "/Game/Meshes/Weapons/SK_Glock17.SK_Glock17",
+  "Properties": {
+    "bIsEquipped": {
+      "Type": "bool",
+      "Value": false
+    },
+    "bIsFiring": {
+      "Type": "bool",
+      "Value": false
+    },
+    "bIsReloading": {
+      "Type": "bool",
+      "Value": false
+    },
+    "bIsAiming": {
+      "Type": "bool",
+      "Value": false
+    },
+    "bIsInspecting": {
+      "Type": "bool",
+      "Value": false
+    },
+    "CurrentAmmo": {
+      "Type": "int32",
+      "Value": 17
+    },
+    "MaxAmmo": {
+      "Type": "int32",
+      "Value": 17
+    },
+    "ReloadType": {
+      "Type": "EReloadType",
+      "Value": "Tactical"
+    },
+    "FireRate": {
+      "Type": "float",
+      "Value": 400.0
+    },
+    "AimAlpha": {
+      "Type": "float",
+      "Value": 0.0
+    },
+    "RecoilAlpha": {
+      "Type": "float",
+      "Value": 0.0
+    },
+    "SlidePosition": {
+      "Type": "float",
+      "Value": 0.0
+    },
+    "TriggerPosition": {
+      "Type": "float",
+      "Value": 0.0
+    },
+    "SafetyPosition": {
+      "Type": "float",
+      "Value": 0.0
+    }
+  },
+  "AnimationGraph": {
+    "StateMachines": [
+      {
+        "StateMachineName": "WeaponStateMachine",
+        "States": [
+          {
+            "StateName": "Idle",
+            "bIsEntryState": true,
+            "Animation": "/Game/Animations/Weapons/Pistol/AS_Glock17_Idle.AS_Glock17_Idle",
+            "Transitions": [
+              {
+                "TargetState": "Fire",
+                "Condition": "bIsFiring",
+                "Duration": 0.1
+              },
+              {
+                "TargetState": "Reload",
+                "Condition": "bIsReloading",
+                "Duration": 0.2
+              },
+              {
+                "TargetState": "Inspect",
+                "Condition": "bIsInspecting",
+                "Duration": 0.3
+              }
+            ]
+          },
+          {
+            "StateName": "Fire",
+            "Animation": "/Game/Animations/Weapons/Pistol/AS_Glock17_Fire.AS_Glock17_Fire",
+            "bLooping": false,
+            "PlayRate": {
+              "NodeType": "Divide",
+              "A": "FireRate",
+              "B": 400.0
+            },
+            "Transitions": [
+              {
+                "TargetState": "Idle",
+                "Condition": {
+                  "NodeType": "Not",
+                  "Input": "bIsFiring"
+                },
+                "Duration": 0.1
+              }
+            ],
+            "OnStateEnter": [
+              {
+                "NodeType": "CallFunction",
+                "FunctionName": "PlaySlideAnimation"
+              },
+              {
+                "NodeType": "CallFunction",
+                "FunctionName": "PlayTriggerAnimation"
+              }
+            ]
+          },
+          {
+            "StateName": "Reload",
+            "bLooping": false,
+            "SubStateMachine": {
+              "States": [
+                {
+                  "StateName": "ReloadStart",
+                  "bIsEntryState": true,
+                  "Animation": "/Game/Animations/Weapons/Pistol/AS_Glock17_ReloadStart.AS_Glock17_ReloadStart",
+                  "Transitions": [
+                    {
+                      "TargetState": "ReloadLoop",
+                      "Condition": "AnimationComplete",
+                      "Duration": 0.1
+                    }
+                  ]
+                },
+                {
+                  "StateName": "ReloadLoop",
+                  "Animation": {
+                    "NodeType": "Select",
+                    "Condition": {
+                      "NodeType": "Equal",
+                      "A": "CurrentAmmo",
+                      "B": 0
+                    },
+                    "TrueValue": "/Game/Animations/Weapons/Pistol/AS_Glock17_ReloadEmpty.AS_Glock17_ReloadEmpty",
+                    "FalseValue": "/Game/Animations/Weapons/Pistol/AS_Glock17_ReloadTactical.AS_Glock17_ReloadTactical"
+                  },
+                  "Transitions": [
+                    {
+                      "TargetState": "ReloadEnd",
+                      "Condition": "AnimationComplete",
+                      "Duration": 0.1
+                    }
+                  ]
+                },
+                {
+                  "StateName": "ReloadEnd",
+                  "Animation": "/Game/Animations/Weapons/Pistol/AS_Glock17_ReloadEnd.AS_Glock17_ReloadEnd",
+                  "Transitions": [
+                    {
+                      "TargetState": "Exit",
+                      "Condition": "AnimationComplete",
+                      "Duration": 0.1
+                    }
+                  ]
+                }
+              ]
+            },
+            "Transitions": [
+              {
+                "TargetState": "Idle",
+                "Condition": {
+                  "NodeType": "Not",
+                  "Input": "bIsReloading"
+                },
+                "Duration": 0.2
+              }
+            ]
+          },
+          {
+            "StateName": "Inspect",
+            "Animation": "/Game/Animations/Weapons/Pistol/AS_Glock17_Inspect.AS_Glock17_Inspect",
+            "bLooping": false,
+            "Transitions": [
+              {
+                "TargetState": "Idle",
+                "Condition": {
+                  "NodeType": "Not",
+                  "Input": "bIsInspecting"
+                },
+                "Duration": 0.3
+              }
+            ]
+          }
+        ]
+      }
+    ],
+    "BlendSpaces": [
+      {
+        "BlendSpaceName": "AimBlendSpace",
+        "Dimensions": 1,
+        "Axis": [
+          {
+            "Name": "AimAlpha",
+            "Min": 0.0,
+            "Max": 1.0
+          }
+        ],
+        "SamplePoints": [
+          {
+            "Position": [0.0],
+            "Animation": "/Game/Animations/Weapons/Pistol/AS_Glock17_Idle.AS_Glock17_Idle"
+          },
+          {
+            "Position": [1.0],
+            "Animation": "/Game/Animations/Weapons/Pistol/AS_Glock17_AimIdle.AS_Glock17_AimIdle"
+          }
+        ]
+      }
+    ],
+    "LayeredBlends": [
+      {
+        "LayerName": "AimLayer",
+        "BlendMode": "BlendByWeight",
+        "BaseAnimation": "WeaponStateMachine",
+        "LayerAnimation": "AimBlendSpace",
+        "Weight": "AimAlpha"
+      },
+      {
+        "LayerName": "RecoilLayer",
+        "BlendMode": "BlendByWeight",
+        "BaseAnimation": "AimLayer",
+        "LayerAnimation": "/Game/Animations/Weapons/Pistol/AS_Glock17_Recoil.AS_Glock17_Recoil",
+        "Weight": "RecoilAlpha"
+      }
+    ],
+    "BoneControllers": [
+      {
+        "ControllerName": "SlideController",
+        "TargetBone": "Slide",
+        "ControlType": "Translation",
+        "TranslationMode": "ReplaceExisting",
+        "Translation": {
+          "X": {
+            "NodeType": "Multiply",
+            "A": "SlidePosition",
+            "B": -2.5
+          },
+          "Y": 0.0,
+          "Z": 0.0
+        }
+      },
+      {
+        "ControllerName": "TriggerController",
+        "TargetBone": "Trigger",
+        "ControlType": "Rotation",
+        "RotationMode": "ReplaceExisting",
+        "Rotation": {
+          "Pitch": {
+            "NodeType": "Multiply",
+            "A": "TriggerPosition",
+            "B": -15.0
+          },
+          "Yaw": 0.0,
+          "Roll": 0.0
+        }
+      },
+      {
+        "ControllerName": "MagazineController",
+        "TargetBone": "Magazine",
+        "ControlType": "Translation",
+        "TranslationMode": "ReplaceExisting",
+        "Translation": {
+          "X": 0.0,
+          "Y": 0.0,
+          "Z": {
+            "NodeType": "Select",
+            "Condition": "bIsReloading",
+            "TrueValue": -10.0,
+            "FalseValue": 0.0
+          }
+        }
+      }
+    ]
+  },
+  "AnimationNotifies": [
+    {
+      "NotifyName": "FireNotify",
+      "NotifyClass": "UAnimNotify_WeaponFire",
+      "Animations": [
+        "/Game/Animations/Weapons/Pistol/AS_Glock17_Fire.AS_Glock17_Fire"
+      ],
+      "Time": 0.1,
+      "Properties": {
+        "bTriggerMuzzleFlash": true,
+        "bEjectShell": true,
+        "bPlayFireSound": true
+      }
+    },
+    {
+      "NotifyName": "ReloadMagOutNotify",
+      "NotifyClass": "UAnimNotify_WeaponReload",
+      "Animations": [
+        "/Game/Animations/Weapons/Pistol/AS_Glock17_ReloadEmpty.AS_Glock17_ReloadEmpty",
+        "/Game/Animations/Weapons/Pistol/AS_Glock17_ReloadTactical.AS_Glock17_ReloadTactical"
+      ],
+      "Time": 0.8,
+      "Properties": {
+        "ReloadStage": "MagazineOut",
+        "bPlaySound": true,
+        "SoundCue": "/Game/Audio/Weapons/SC_Glock17_MagOut.SC_Glock17_MagOut"
+      }
+    },
+    {
+      "NotifyName": "ReloadMagInNotify",
+      "NotifyClass": "UAnimNotify_WeaponReload",
+      "Animations": [
+        "/Game/Animations/Weapons/Pistol/AS_Glock17_ReloadEmpty.AS_Glock17_ReloadEmpty",
+        "/Game/Animations/Weapons/Pistol/AS_Glock17_ReloadTactical.AS_Glock17_ReloadTactical"
+      ],
+      "Time": 1.8,
+      "Properties": {
+        "ReloadStage": "MagazineIn",
+        "bPlaySound": true,
+        "SoundCue": "/Game/Audio/Weapons/SC_Glock17_MagIn.SC_Glock17_MagIn"
+      }
+    },
+    {
+      "NotifyName": "SlideReleaseNotify",
+      "NotifyClass": "UAnimNotify_WeaponReload",
+      "Animations": [
+        "/Game/Animations/Weapons/Pistol/AS_Glock17_ReloadEmpty.AS_Glock17_ReloadEmpty"
+      ],
+      "Time": 2.3,
+      "Properties": {
+        "ReloadStage": "SlideRelease",
+        "bPlaySound": true,
+        "SoundCue": "/Game/Audio/Weapons/SC_Glock17_SlideRelease.SC_Glock17_SlideRelease"
+      }
+    }
+  ],
+  "EventGraph": {
+    "Events": [
+      {
+        "EventName": "BlueprintUpdateAnimation",
+        "EventType": "BlueprintUpdateAnimation",
+        "Nodes": [
+          {
+            "NodeType": "CallFunction",
+            "FunctionName": "UpdateWeaponState"
+          },
+          {
+            "NodeType": "CallFunction",
+            "FunctionName": "UpdateAimAlpha"
+          },
+          {
+            "NodeType": "CallFunction",
+            "FunctionName": "UpdateRecoilAlpha"
+          },
+          {
+            "NodeType": "CallFunction",
+            "FunctionName": "UpdateSlidePosition"
+          },
+          {
+            "NodeType": "CallFunction",
+            "FunctionName": "UpdateTriggerPosition"
+          }
+        ]
+      }
+    ],
+    "Functions": [
+      {
+        "FunctionName": "UpdateWeaponState",
+        "ReturnType": "void",
+        "Parameters": [],
+        "Implementation": {
+          "Nodes": [
+            {
+              "NodeType": "GetOwningActor",
+              "OutputPin": "WeaponActor"
+            },
+            {
+              "NodeType": "Cast",
+              "Object": "WeaponActor",
+              "Class": "BP_Glock17_C",
+              "OutputPin": "WeaponController"
+            },
+            {
+              "NodeType": "GetVariable",
+              "Target": "WeaponController",
+              "VariableName": "bIsFiring",
+              "OutputPin": "IsFiring"
+            },
+            {
+              "NodeType": "SetVariable",
+              "VariableName": "bIsFiring",
+              "Value": "IsFiring"
+            },
+            {
+              "NodeType": "GetVariable",
+              "Target": "WeaponController",
+              "VariableName": "bIsReloading",
+              "OutputPin": "IsReloading"
+            },
+            {
+              "NodeType": "SetVariable",
+              "VariableName": "bIsReloading",
+              "Value": "IsReloading"
+            },
+            {
+              "NodeType": "GetVariable",
+              "Target": "WeaponController",
+              "VariableName": "bIsAiming",
+              "OutputPin": "IsAiming"
+            },
+            {
+              "NodeType": "SetVariable",
+              "VariableName": "bIsAiming",
+              "Value": "IsAiming"
+            },
+            {
+              "NodeType": "GetVariable",
+              "Target": "WeaponController",
+              "VariableName": "CurrentAmmo",
+              "OutputPin": "Ammo"
+            },
+            {
+              "NodeType": "SetVariable",
+              "VariableName": "CurrentAmmo",
+              "Value": "Ammo"
+            }
+          ]
+        }
+      },
+      {
+        "FunctionName": "UpdateAimAlpha",
+        "ReturnType": "void",
+        "Parameters": [],
+        "Implementation": {
+          "Nodes": [
+            {
+              "NodeType": "Select",
+              "Condition": "bIsAiming",
+              "TrueValue": 1.0,
+              "FalseValue": 0.0,
+              "OutputPin": "TargetAlpha"
+            },
+            {
+              "NodeType": "FInterpTo",
+              "Current": "AimAlpha",
+              "Target": "TargetAlpha",
+              "DeltaTime": {
+                "NodeType": "GetWorldDeltaSeconds"
+              },
+              "InterpSpeed": 8.0,
+              "OutputPin": "NewAlpha"
+            },
+            {
+              "NodeType": "SetVariable",
+              "VariableName": "AimAlpha",
+              "Value": "NewAlpha"
+            }
+          ]
+        }
+      },
+      {
+        "FunctionName": "UpdateRecoilAlpha",
+        "ReturnType": "void",
+        "Parameters": [],
+        "Implementation": {
+          "Nodes": [
+            {
+              "NodeType": "Select",
+              "Condition": "bIsFiring",
+              "TrueValue": 1.0,
+              "FalseValue": 0.0,
+              "OutputPin": "TargetAlpha"
+            },
+            {
+              "NodeType": "FInterpTo",
+              "Current": "RecoilAlpha",
+              "Target": "TargetAlpha",
+              "DeltaTime": {
+                "NodeType": "GetWorldDeltaSeconds"
+              },
+              "InterpSpeed": 15.0,
+              "OutputPin": "NewAlpha"
+            },
+            {
+              "NodeType": "SetVariable",
+              "VariableName": "RecoilAlpha",
+              "Value": "NewAlpha"
+            }
+          ]
+        }
+      },
+      {
+        "FunctionName": "UpdateSlidePosition",
+        "ReturnType": "void",
+        "Parameters": [],
+        "Implementation": {
+          "Nodes": [
+            {
+              "NodeType": "Select",
+              "Condition": {
+                "NodeType": "Or",
+                "A": "bIsFiring",
+                "B": {
+                  "NodeType": "Equal",
+                  "A": "CurrentAmmo",
+                  "B": 0
+                }
+              },
+              "TrueValue": 1.0,
+              "FalseValue": 0.0,
+              "OutputPin": "TargetPosition"
+            },
+            {
+              "NodeType": "FInterpTo",
+              "Current": "SlidePosition",
+              "Target": "TargetPosition",
+              "DeltaTime": {
+                "NodeType": "GetWorldDeltaSeconds"
+              },
+              "InterpSpeed": 20.0,
+              "OutputPin": "NewPosition"
+            },
+            {
+              "NodeType": "SetVariable",
+              "VariableName": "SlidePosition",
+              "Value": "NewPosition"
+            }
+          ]
+        }
+      },
+      {
+        "FunctionName": "UpdateTriggerPosition",
+        "ReturnType": "void",
+        "Parameters": [],
+        "Implementation": {
+          "Nodes": [
+            {
+              "NodeType": "Select",
+              "Condition": "bIsFiring",
+              "TrueValue": 1.0,
+              "FalseValue": 0.0,
+              "OutputPin": "TargetPosition"
+            },
+            {
+              "NodeType": "FInterpTo",
+              "Current": "TriggerPosition",
+              "Target": "TargetPosition",
+              "DeltaTime": {
+                "NodeType": "GetWorldDeltaSeconds"
+              },
+              "InterpSpeed": 25.0,
+              "OutputPin": "NewPosition"
+            },
+            {
+              "NodeType": "SetVariable",
+              "VariableName": "TriggerPosition",
+              "Value": "NewPosition"
+            }
+          ]
+        }
+      }
+    ]
+  }
+}

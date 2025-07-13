@@ -1,0 +1,605 @@
+{
+  "Type": "Blueprint",
+  "Name": "BP_BallisticsSystem_Glock17",
+  "Class": "UBlueprint",
+  "ParentClass": "/Game/Blueprints/Weapons/BP_BallisticsSystemBase.BP_BallisticsSystemBase_C",
+  "BlueprintType": "BPTYPE_Normal",
+  "Properties": {
+    "BaseDamage": {
+      "Type": "float",
+      "Value": 35.0
+    },
+    "DamageVariance": {
+      "Type": "float",
+      "Value": 7.0
+    },
+    "MuzzleVelocity": {
+      "Type": "float",
+      "Value": 375.0
+    },
+    "EffectiveRange": {
+      "Type": "float",
+      "Value": 50.0
+    },
+    "MaxRange": {
+      "Type": "float",
+      "Value": 100.0
+    },
+    "PenetrationPower": {
+      "Type": "float",
+      "Value": 15.0
+    },
+    "BulletDrop": {
+      "Type": "float",
+      "Value": 0.15
+    },
+    "AirResistance": {
+      "Type": "float",
+      "Value": 0.02
+    },
+    "CriticalHitMultiplier": {
+      "Type": "float",
+      "Value": 2.0
+    },
+    "ArmorPenetrationCurve": {
+      "Type": "UCurveFloat",
+      "Value": "/Game/Data/Curves/C_9mm_ArmorPenetration.C_9mm_ArmorPenetration"
+    },
+    "DamageFalloffCurve": {
+      "Type": "UCurveFloat",
+      "Value": "/Game/Data/Curves/C_9mm_DamageFalloff.C_9mm_DamageFalloff"
+    }
+  },
+  "Functions": [
+    {
+      "FunctionName": "CalculateDamage",
+      "ReturnType": "float",
+      "Parameters": [
+        {
+          "ParameterName": "HitLocation",
+          "ParameterType": "FVector"
+        },
+        {
+          "ParameterName": "HitActor",
+          "ParameterType": "AActor"
+        },
+        {
+          "ParameterName": "HitComponent",
+          "ParameterType": "UPrimitiveComponent"
+        },
+        {
+          "ParameterName": "FireOrigin",
+          "ParameterType": "FVector"
+        }
+      ],
+      "Implementation": {
+        "Nodes": [
+          {
+            "NodeType": "CallFunction",
+            "FunctionName": "CalculateDistance",
+            "Parameters": ["FireOrigin", "HitLocation"],
+            "OutputPin": "Distance"
+          },
+          {
+            "NodeType": "CallFunction",
+            "FunctionName": "GetBaseDamageWithVariance",
+            "OutputPin": "RandomizedBaseDamage"
+          },
+          {
+            "NodeType": "CallFunction",
+            "FunctionName": "ApplyDistanceFalloff",
+            "Parameters": ["RandomizedBaseDamage", "Distance"],
+            "OutputPin": "DistanceAdjustedDamage"
+          },
+          {
+            "NodeType": "CallFunction",
+            "FunctionName": "CheckCriticalHit",
+            "Parameters": ["HitComponent"],
+            "OutputPin": "bIsCriticalHit"
+          },
+          {
+            "NodeType": "Branch",
+            "Condition": "bIsCriticalHit",
+            "TrueExec": [
+              {
+                "NodeType": "Multiply",
+                "A": "DistanceAdjustedDamage",
+                "B": "CriticalHitMultiplier",
+                "OutputPin": "CriticalDamage"
+              }
+            ],
+            "FalseExec": [
+              {
+                "NodeType": "SetVariable",
+                "VariableName": "CriticalDamage",
+                "Value": "DistanceAdjustedDamage"
+              }
+            ]
+          },
+          {
+            "NodeType": "CallFunction",
+            "FunctionName": "ApplyArmorReduction",
+            "Parameters": ["CriticalDamage", "HitActor", "HitComponent"],
+            "OutputPin": "ArmorAdjustedDamage"
+          },
+          {
+            "NodeType": "CallFunction",
+            "FunctionName": "ApplyWeaponMasteryBonus",
+            "Parameters": ["ArmorAdjustedDamage"],
+            "OutputPin": "FinalDamage"
+          },
+          {
+            "NodeType": "Max",
+            "A": "FinalDamage",
+            "B": 1.0,
+            "OutputPin": "ClampedDamage"
+          },
+          {
+            "NodeType": "ReturnNode",
+            "ReturnValue": "ClampedDamage"
+          }
+        ]
+      }
+    },
+    {
+      "FunctionName": "GetBaseDamageWithVariance",
+      "ReturnType": "float",
+      "Parameters": [],
+      "Implementation": {
+        "Nodes": [
+          {
+            "NodeType": "RandomFloatInRange",
+            "Min": {
+              "NodeType": "Subtract",
+              "A": "BaseDamage",
+              "B": "DamageVariance"
+            },
+            "Max": {
+              "NodeType": "Add",
+              "A": "BaseDamage",
+              "B": "DamageVariance"
+            },
+            "OutputPin": "RandomDamage"
+          },
+          {
+            "NodeType": "ReturnNode",
+            "ReturnValue": "RandomDamage"
+          }
+        ]
+      }
+    },
+    {
+      "FunctionName": "ApplyDistanceFalloff",
+      "ReturnType": "float",
+      "Parameters": [
+        {
+          "ParameterName": "Damage",
+          "ParameterType": "float"
+        },
+        {
+          "ParameterName": "Distance",
+          "ParameterType": "float"
+        }
+      ],
+      "Implementation": {
+        "Nodes": [
+          {
+            "NodeType": "Divide",
+            "A": "Distance",
+            "B": "MaxRange",
+            "OutputPin": "NormalizedDistance"
+          },
+          {
+            "NodeType": "Clamp",
+            "Value": "NormalizedDistance",
+            "Min": 0.0,
+            "Max": 1.0,
+            "OutputPin": "ClampedDistance"
+          },
+          {
+            "NodeType": "GetFloatValue",
+            "Curve": "DamageFalloffCurve",
+            "InTime": "ClampedDistance",
+            "OutputPin": "FalloffMultiplier"
+          },
+          {
+            "NodeType": "Multiply",
+            "A": "Damage",
+            "B": "FalloffMultiplier",
+            "OutputPin": "AdjustedDamage"
+          },
+          {
+            "NodeType": "ReturnNode",
+            "ReturnValue": "AdjustedDamage"
+          }
+        ]
+      }
+    },
+    {
+      "FunctionName": "CheckCriticalHit",
+      "ReturnType": "bool",
+      "Parameters": [
+        {
+          "ParameterName": "HitComponent",
+          "ParameterType": "UPrimitiveComponent"
+        }
+      ],
+      "Implementation": {
+        "Nodes": [
+          {
+            "NodeType": "GetComponentByTag",
+            "Component": "HitComponent",
+            "Tag": "Head",
+            "OutputPin": "bIsHeadshot"
+          },
+          {
+            "NodeType": "GetComponentByTag",
+            "Component": "HitComponent",
+            "Tag": "Heart",
+            "OutputPin": "bIsHeartshot"
+          },
+          {
+            "NodeType": "Or",
+            "A": "bIsHeadshot",
+            "B": "bIsHeartshot",
+            "OutputPin": "bIsCriticalZone"
+          },
+          {
+            "NodeType": "Branch",
+            "Condition": "bIsCriticalZone",
+            "TrueExec": [
+              {
+                "NodeType": "ReturnNode",
+                "ReturnValue": true
+              }
+            ],
+            "FalseExec": [
+              {
+                "NodeType": "CallFunction",
+                "FunctionName": "GetPlayerCriticalChance",
+                "OutputPin": "CritChance"
+              },
+              {
+                "NodeType": "RandomFloat",
+                "OutputPin": "RandomValue"
+              },
+              {
+                "NodeType": "LessThan",
+                "A": "RandomValue",
+                "B": "CritChance",
+                "OutputPin": "bRandomCrit"
+              },
+              {
+                "NodeType": "ReturnNode",
+                "ReturnValue": "bRandomCrit"
+              }
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "FunctionName": "ApplyArmorReduction",
+      "ReturnType": "float",
+      "Parameters": [
+        {
+          "ParameterName": "Damage",
+          "ParameterType": "float"
+        },
+        {
+          "ParameterName": "HitActor",
+          "ParameterType": "AActor"
+        },
+        {
+          "ParameterName": "HitComponent",
+          "ParameterType": "UPrimitiveComponent"
+        }
+      ],
+      "Implementation": {
+        "Nodes": [
+          {
+            "NodeType": "CallFunction",
+            "FunctionName": "GetActorArmorValue",
+            "Parameters": ["HitActor", "HitComponent"],
+            "OutputPin": "ArmorValue"
+          },
+          {
+            "NodeType": "Branch",
+            "Condition": {
+              "NodeType": "LessEqual",
+              "A": "ArmorValue",
+              "B": 0.0
+            },
+            "TrueExec": [
+              {
+                "NodeType": "ReturnNode",
+                "ReturnValue": "Damage"
+              }
+            ],
+            "FalseExec": [
+              {
+                "NodeType": "Divide",
+                "A": "ArmorValue",
+                "B": 100.0,
+                "OutputPin": "NormalizedArmor"
+              },
+              {
+                "NodeType": "GetFloatValue",
+                "Curve": "ArmorPenetrationCurve",
+                "InTime": "NormalizedArmor",
+                "OutputPin": "PenetrationEfficiency"
+              },
+              {
+                "NodeType": "Multiply",
+                "A": "Damage",
+                "B": "PenetrationEfficiency",
+                "OutputPin": "PenetratedDamage"
+              },
+              {
+                "NodeType": "CallFunction",
+                "FunctionName": "DamageArmor",
+                "Parameters": ["HitActor", "HitComponent", "PenetratedDamage"]
+              },
+              {
+                "NodeType": "ReturnNode",
+                "ReturnValue": "PenetratedDamage"
+              }
+            ]
+          }
+        ]
+      }
+    },
+    {
+      "FunctionName": "ApplyWeaponMasteryBonus",
+      "ReturnType": "float",
+      "Parameters": [
+        {
+          "ParameterName": "Damage",
+          "ParameterType": "float"
+        }
+      ],
+      "Implementation": {
+        "Nodes": [
+          {
+            "NodeType": "CallFunction",
+            "FunctionName": "GetPlayerWeaponMastery",
+            "Parameters": ["Glock17"],
+            "OutputPin": "MasteryLevel"
+          },
+          {
+            "NodeType": "Divide",
+            "A": "MasteryLevel",
+            "B": 100.0,
+            "OutputPin": "MasteryPercent"
+          },
+          {
+            "NodeType": "Multiply",
+            "A": "MasteryPercent",
+            "B": 0.15,
+            "OutputPin": "DamageBonus"
+          },
+          {
+            "NodeType": "Add",
+            "A": 1.0,
+            "B": "DamageBonus",
+            "OutputPin": "DamageMultiplier"
+          },
+          {
+            "NodeType": "Multiply",
+            "A": "Damage",
+            "B": "DamageMultiplier",
+            "OutputPin": "BoostedDamage"
+          },
+          {
+            "NodeType": "ReturnNode",
+            "ReturnValue": "BoostedDamage"
+          }
+        ]
+      }
+    },
+    {
+      "FunctionName": "CalculateBulletTrajectory",
+      "ReturnType": "TArray<FVector>",
+      "Parameters": [
+        {
+          "ParameterName": "StartLocation",
+          "ParameterType": "FVector"
+        },
+        {
+          "ParameterName": "Direction",
+          "ParameterType": "FVector"
+        },
+        {
+          "ParameterName": "MaxDistance",
+          "ParameterType": "float"
+        }
+      ],
+      "Implementation": {
+        "Nodes": [
+          {
+            "NodeType": "SetVariable",
+            "VariableName": "TrajectoryPoints",
+            "Value": {
+              "NodeType": "MakeArray",
+              "ArrayType": "FVector"
+            }
+          },
+          {
+            "NodeType": "SetVariable",
+            "VariableName": "CurrentVelocity",
+            "Value": {
+              "NodeType": "Multiply",
+              "A": "Direction",
+              "B": "MuzzleVelocity"
+            }
+          },
+          {
+            "NodeType": "SetVariable",
+            "VariableName": "CurrentPosition",
+            "Value": "StartLocation"
+          },
+          {
+            "NodeType": "SetVariable",
+            "VariableName": "TimeStep",
+            "Value": 0.01
+          },
+          {
+            "NodeType": "SetVariable",
+            "VariableName": "TotalDistance",
+            "Value": 0.0
+          },
+          {
+            "NodeType": "ForLoop",
+            "FirstIndex": 0,
+            "LastIndex": 1000,
+            "LoopBody": [
+              {
+                "NodeType": "Branch",
+                "Condition": {
+                  "NodeType": "GreaterThan",
+                  "A": "TotalDistance",
+                  "B": "MaxDistance"
+                },
+                "TrueExec": [
+                  {
+                    "NodeType": "BreakLoop"
+                  }
+                ]
+              },
+              {
+                "NodeType": "CallFunction",
+                "FunctionName": "ApplyBulletPhysics",
+                "Parameters": ["CurrentVelocity", "TimeStep"],
+                "OutputPin": "NewVelocity"
+              },
+              {
+                "NodeType": "Multiply",
+                "A": "NewVelocity",
+                "B": "TimeStep",
+                "OutputPin": "Displacement"
+              },
+              {
+                "NodeType": "Add",
+                "A": "CurrentPosition",
+                "B": "Displacement",
+                "OutputPin": "NewPosition"
+              },
+              {
+                "NodeType": "VectorLength",
+                "Vector": "Displacement",
+                "OutputPin": "StepDistance"
+              },
+              {
+                "NodeType": "Add",
+                "A": "TotalDistance",
+                "B": "StepDistance",
+                "OutputPin": "NewTotalDistance"
+              },
+              {
+                "NodeType": "ArrayAdd",
+                "Array": "TrajectoryPoints",
+                "Item": "NewPosition"
+              },
+              {
+                "NodeType": "SetVariable",
+                "VariableName": "CurrentPosition",
+                "Value": "NewPosition"
+              },
+              {
+                "NodeType": "SetVariable",
+                "VariableName": "CurrentVelocity",
+                "Value": "NewVelocity"
+              },
+              {
+                "NodeType": "SetVariable",
+                "VariableName": "TotalDistance",
+                "Value": "NewTotalDistance"
+              }
+            ]
+          },
+          {
+            "NodeType": "ReturnNode",
+            "ReturnValue": "TrajectoryPoints"
+          }
+        ]
+      }
+    },
+    {
+      "FunctionName": "ApplyBulletPhysics",
+      "ReturnType": "FVector",
+      "Parameters": [
+        {
+          "ParameterName": "Velocity",
+          "ParameterType": "FVector"
+        },
+        {
+          "ParameterName": "DeltaTime",
+          "ParameterType": "float"
+        }
+      ],
+      "Implementation": {
+        "Nodes": [
+          {
+            "NodeType": "VectorLength",
+            "Vector": "Velocity",
+            "OutputPin": "Speed"
+          },
+          {
+            "NodeType": "Multiply",
+            "A": "Speed",
+            "B": "Speed",
+            "OutputPin": "SpeedSquared"
+          },
+          {
+            "NodeType": "Multiply",
+            "A": "SpeedSquared",
+            "B": "AirResistance",
+            "OutputPin": "DragForce"
+          },
+          {
+            "NodeType": "Normalize",
+            "Vector": "Velocity",
+            "OutputPin": "VelocityDirection"
+          },
+          {
+            "NodeType": "Multiply",
+            "A": "VelocityDirection",
+            "B": "DragForce",
+            "OutputPin": "DragVector"
+          },
+          {
+            "NodeType": "MakeVector",
+            "X": 0.0,
+            "Y": 0.0,
+            "Z": {
+              "NodeType": "Multiply",
+              "A": -980.0,
+              "B": "BulletDrop"
+            },
+            "OutputPin": "GravityVector"
+          },
+          {
+            "NodeType": "Subtract",
+            "A": "Velocity",
+            "B": "DragVector",
+            "OutputPin": "DragAdjustedVelocity"
+          },
+          {
+            "NodeType": "Add",
+            "A": "DragAdjustedVelocity",
+            "B": {
+              "NodeType": "Multiply",
+              "A": "GravityVector",
+              "B": "DeltaTime"
+            },
+            "OutputPin": "FinalVelocity"
+          },
+          {
+            "NodeType": "ReturnNode",
+            "ReturnValue": "FinalVelocity"
+          }
+        ]
+      }
+    }
+  ]
+}

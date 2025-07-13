@@ -1,0 +1,342 @@
+{
+  "Type": "Blueprint",
+  "Name": "BP_Glock17",
+  "Class": "UBlueprint",
+  "ParentClass": "/Game/Blueprints/Weapons/BP_WeaponBase.BP_WeaponBase_C",
+  "BlueprintType": "BPTYPE_Normal",
+  "Properties": {
+    "WeaponID": {
+      "Type": "FString",
+      "Value": "Glock17"
+    },
+    "WeaponName": {
+      "Type": "FText",
+      "Value": {
+        "SourceString": "Glock 17",
+        "Key": "Weapons.Glock17.Name",
+        "Namespace": "DDS2"
+      }
+    },
+    "WeaponMesh": {
+      "Type": "UStaticMeshComponent",
+      "Properties": {
+        "StaticMesh": {
+          "Type": "TSoftObjectPtr<UStaticMesh>",
+          "Value": "/Game/Meshes/Weapons/SM_Glock17.SM_Glock17"
+        },
+        "Materials": {
+          "Type": "TArray<TSoftObjectPtr<UMaterialInterface>>",
+          "Value": [
+            "/Game/Materials/Weapons/M_Glock17_Body.M_Glock17_Body",
+            "/Game/Materials/Weapons/M_Glock17_Slide.M_Glock17_Slide",
+            "/Game/Materials/Weapons/M_Glock17_Barrel.M_Glock17_Barrel"
+          ]
+        },
+        "CollisionEnabled": {
+          "Type": "ECollisionEnabled",
+          "Value": "QueryAndPhysics"
+        },
+        "CollisionObjectType": {
+          "Type": "ECollisionChannel",
+          "Value": "WorldDynamic"
+        }
+      }
+    },
+    "WeaponStats": {
+      "Type": "FWeaponStats",
+      "Value": {
+        "BaseDamage": 35.0,
+        "DamageVariance": 7.0,
+        "BaseAccuracy": 0.75,
+        "EffectiveRange": 50.0,
+        "MaxRange": 100.0,
+        "FireRate": 400.0,
+        "ReloadTime": 2.5,
+        "MagazineSize": 17,
+        "AmmoType": "9mm",
+        "RecoilPattern": {
+          "X": 2.5,
+          "Y": 8.0
+        },
+        "MuzzleVelocity": 375.0,
+        "Penetration": 15.0
+      }
+    },
+    "AudioComponents": {
+      "Type": "TArray<UAudioComponent>",
+      "Value": [
+        {
+          "ComponentName": "FireSoundComponent",
+          "SoundCue": "/Game/Audio/Weapons/SC_Glock17_Fire.SC_Glock17_Fire",
+          "VolumeMultiplier": 1.0,
+          "PitchMultiplier": 1.0,
+          "bAutoActivate": false
+        },
+        {
+          "ComponentName": "ReloadSoundComponent",
+          "SoundCue": "/Game/Audio/Weapons/SC_Glock17_Reload.SC_Glock17_Reload",
+          "VolumeMultiplier": 0.8,
+          "PitchMultiplier": 1.0,
+          "bAutoActivate": false
+        },
+        {
+          "ComponentName": "EmptySoundComponent",
+          "SoundCue": "/Game/Audio/Weapons/SC_Pistol_Empty.SC_Pistol_Empty",
+          "VolumeMultiplier": 0.6,
+          "PitchMultiplier": 1.0,
+          "bAutoActivate": false
+        }
+      ]
+    },
+    "ParticleComponents": {
+      "Type": "TArray<UParticleSystemComponent>",
+      "Value": [
+        {
+          "ComponentName": "MuzzleFlashComponent",
+          "ParticleSystem": "/Game/VFX/Weapons/P_Pistol_MuzzleFlash.P_Pistol_MuzzleFlash",
+          "bAutoActivate": false,
+          "AttachSocketName": "MuzzleSocket"
+        },
+        {
+          "ComponentName": "ShellEjectionComponent",
+          "ParticleSystem": "/Game/VFX/Weapons/P_9mm_ShellEject.P_9mm_ShellEject",
+          "bAutoActivate": false,
+          "AttachSocketName": "EjectionSocket"
+        }
+      ]
+    },
+    "AnimationBlueprint": {
+      "Type": "TSoftClassPtr<UAnimBlueprint>",
+      "Value": "/Game/Animations/Weapons/ABP_Glock17.ABP_Glock17_C"
+    },
+    "WeaponAnimations": {
+      "Type": "FWeaponAnimations",
+      "Value": {
+        "IdleAnimation": "/Game/Animations/Weapons/Pistol/AS_Pistol_Idle.AS_Pistol_Idle",
+        "FireAnimation": "/Game/Animations/Weapons/Pistol/AS_Pistol_Fire.AS_Pistol_Fire",
+        "ReloadAnimation": "/Game/Animations/Weapons/Pistol/AS_Pistol_Reload.AS_Pistol_Reload",
+        "DrawAnimation": "/Game/Animations/Weapons/Pistol/AS_Pistol_Draw.AS_Pistol_Draw",
+        "HolsterAnimation": "/Game/Animations/Weapons/Pistol/AS_Pistol_Holster.AS_Pistol_Holster",
+        "InspectAnimation": "/Game/Animations/Weapons/Pistol/AS_Pistol_Inspect.AS_Pistol_Inspect"
+      }
+    },
+    "WeaponSockets": {
+      "Type": "TArray<FWeaponSocket>",
+      "Value": [
+        {
+          "SocketName": "MuzzleSocket",
+          "SocketLocation": {
+            "X": 15.0,
+            "Y": 0.0,
+            "Z": 2.5
+          },
+          "SocketRotation": {
+            "Pitch": 0.0,
+            "Yaw": 0.0,
+            "Roll": 0.0
+          }
+        },
+        {
+          "SocketName": "EjectionSocket",
+          "SocketLocation": {
+            "X": 5.0,
+            "Y": 1.5,
+            "Z": 3.0
+          },
+          "SocketRotation": {
+            "Pitch": 0.0,
+            "Yaw": 45.0,
+            "Roll": 0.0
+          }
+        },
+        {
+          "SocketName": "SightSocket",
+          "SocketLocation": {
+            "X": 8.0,
+            "Y": 0.0,
+            "Z": 4.0
+          },
+          "SocketRotation": {
+            "Pitch": 0.0,
+            "Yaw": 0.0,
+            "Roll": 0.0
+          }
+        },
+        {
+          "SocketName": "RailSocket",
+          "SocketLocation": {
+            "X": 10.0,
+            "Y": 0.0,
+            "Z": 1.5
+          },
+          "SocketRotation": {
+            "Pitch": 0.0,
+            "Yaw": 0.0,
+            "Roll": 0.0
+          }
+        }
+      ]
+    },
+    "ModificationSlots": {
+      "Type": "TArray<FModificationSlot>",
+      "Value": [
+        {
+          "SlotName": "Barrel",
+          "SlotType": "PistolBarrel",
+          "bIsRequired": false,
+          "CompatibleMods": [
+            "ExtendedBarrel",
+            "SuppressorBarrel",
+            "CompensatorBarrel"
+          ]
+        },
+        {
+          "SlotName": "Sights",
+          "SlotType": "PistolSights",
+          "bIsRequired": false,
+          "CompatibleMods": [
+            "IronSights",
+            "RedDotSight",
+            "LaserSight"
+          ]
+        },
+        {
+          "SlotName": "Grip",
+          "SlotType": "PistolGrip",
+          "bIsRequired": false,
+          "CompatibleMods": [
+            "RubberGrip",
+            "TacticalGrip",
+            "ExtendedGrip"
+          ]
+        }
+      ]
+    },
+    "WeaponPhysics": {
+      "Type": "FWeaponPhysics",
+      "Value": {
+        "Mass": 0.625,
+        "CenterOfMass": {
+          "X": 0.0,
+          "Y": 0.0,
+          "Z": 0.0
+        },
+        "LinearDamping": 0.1,
+        "AngularDamping": 0.1,
+        "bSimulatePhysics": true,
+        "bEnableGravity": true,
+        "CollisionProfile": "Weapon"
+      }
+    },
+    "WeaponBehavior": {
+      "Type": "FWeaponBehavior",
+      "Value": {
+        "FireMode": "SemiAutomatic",
+        "bCanBurstFire": false,
+        "BurstCount": 0,
+        "bCanFullAuto": false,
+        "SafetyEnabled": true,
+        "TriggerPullWeight": 2.5,
+        "ResetDistance": 0.5
+      }
+    },
+    "DurabilitySystem": {
+      "Type": "FDurabilitySystem",
+      "Value": {
+        "MaxDurability": 100.0,
+        "CurrentDurability": 100.0,
+        "DurabilityLossPerShot": 0.1,
+        "DurabilityLossPerReload": 0.05,
+        "CriticalDurabilityThreshold": 20.0,
+        "PerformanceDegradationCurve": "/Game/Data/Curves/C_WeaponDegradation.C_WeaponDegradation"
+      }
+    }
+  },
+  "Components": [
+    {
+      "ComponentClass": "UStaticMeshComponent",
+      "ComponentName": "WeaponMesh",
+      "bIsRootComponent": true
+    },
+    {
+      "ComponentClass": "UBoxComponent",
+      "ComponentName": "CollisionBox",
+      "AttachParent": "WeaponMesh"
+    },
+    {
+      "ComponentClass": "UAudioComponent",
+      "ComponentName": "FireSoundComponent",
+      "AttachParent": "WeaponMesh"
+    },
+    {
+      "ComponentClass": "UAudioComponent",
+      "ComponentName": "ReloadSoundComponent",
+      "AttachParent": "WeaponMesh"
+    },
+    {
+      "ComponentClass": "UParticleSystemComponent",
+      "ComponentName": "MuzzleFlashComponent",
+      "AttachParent": "WeaponMesh"
+    },
+    {
+      "ComponentClass": "UParticleSystemComponent",
+      "ComponentName": "ShellEjectionComponent",
+      "AttachParent": "WeaponMesh"
+    }
+  ],
+  "EventGraph": {
+    "Events": [
+      {
+        "EventName": "BeginPlay",
+        "EventType": "ActorBeginPlay"
+      },
+      {
+        "EventName": "OnFire",
+        "EventType": "WeaponFire"
+      },
+      {
+        "EventName": "OnReload",
+        "EventType": "WeaponReload"
+      },
+      {
+        "EventName": "OnEquip",
+        "EventType": "WeaponEquip"
+      },
+      {
+        "EventName": "OnUnequip",
+        "EventType": "WeaponUnequip"
+      }
+    ],
+    "Functions": [
+      {
+        "FunctionName": "CalculateDamage",
+        "ReturnType": "float",
+        "Parameters": [
+          {
+            "ParameterName": "Distance",
+            "ParameterType": "float"
+          },
+          {
+            "ParameterName": "HitLocation",
+            "ParameterType": "FVector"
+          }
+        ]
+      },
+      {
+        "FunctionName": "ApplyRecoil",
+        "ReturnType": "void",
+        "Parameters": [
+          {
+            "ParameterName": "RecoilMultiplier",
+            "ParameterType": "float"
+          }
+        ]
+      },
+      {
+        "FunctionName": "CheckAmmo",
+        "ReturnType": "bool",
+        "Parameters": []
+      }
+    ]
+  }
+}

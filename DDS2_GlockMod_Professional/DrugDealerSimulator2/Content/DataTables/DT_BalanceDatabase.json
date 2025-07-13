@@ -1,0 +1,427 @@
+{
+  "Type": "DataTable",
+  "Name": "DT_BalanceDatabase",
+  "Class": "UDataTable",
+  "Archetype": "DataTable'/Game/DataTables/DT_BalanceDatabase.DT_BalanceDatabase'",
+  "Properties": {
+    "RowStruct": {
+      "ObjectName": "BalanceDataStruct",
+      "ObjectPath": "/Game/Blueprints/Data/BalanceDataStruct"
+    }
+  },
+  "Rows": {
+    "WeaponBalance_Glock17": {
+      "BalanceID": {
+        "Type": "FString",
+        "Value": "WeaponBalance_Glock17"
+      },
+      "ItemID": {
+        "Type": "FString",
+        "Value": "Glock17"
+      },
+      "BalanceCategory": {
+        "Type": "EBalanceCategory",
+        "Value": "Weapons"
+      },
+      "EconomicBalance": {
+        "Type": "FEconomicBalance",
+        "Value": {
+          "BasePrice": {
+            "Type": "int32",
+            "Value": 800
+          },
+          "MinPrice": {
+            "Type": "int32",
+            "Value": 600
+          },
+          "MaxPrice": {
+            "Type": "int32",
+            "Value": 1200
+          },
+          "InflationRate": {
+            "Type": "float",
+            "Value": 0.02
+          },
+          "DemandMultiplier": {
+            "Type": "float",
+            "Value": 1.0
+          },
+          "SupplyMultiplier": {
+            "Type": "float",
+            "Value": 1.0
+          },
+          "SeasonalPriceModifier": {
+            "Type": "TMap<FString, float>",
+            "Value": {
+              "Spring": 1.0,
+              "Summer": 1.1,
+              "Autumn": 0.95,
+              "Winter": 1.05
+            }
+          }
+        }
+      },
+      "CombatBalance": {
+        "Type": "FCombatBalance",
+        "Value": {
+          "DamagePerSecond": {
+            "Type": "float",
+            "Value": 23.33
+          },
+          "TimeToKill": {
+            "Type": "float",
+            "Value": 4.2
+          },
+          "EffectiveRange": {
+            "Type": "float",
+            "Value": 50.0
+          },
+          "AccuracyFalloff": {
+            "Type": "UCurveFloat",
+            "Value": "/Game/Data/Curves/C_PistolAccuracyFalloff.C_PistolAccuracyFalloff"
+          },
+          "DamageFalloff": {
+            "Type": "UCurveFloat",
+            "Value": "/Game/Data/Curves/C_PistolDamageFalloff.C_PistolDamageFalloff"
+          },
+          "RecoilRecoveryTime": {
+            "Type": "float",
+            "Value": 0.3
+          },
+          "MovementAccuracyPenalty": {
+            "Type": "float",
+            "Value": 0.25
+          }
+        }
+      },
+      "ProgressionBalance": {
+        "Type": "FProgressionBalance",
+        "Value": {
+          "UnlockLevel": {
+            "Type": "int32",
+            "Value": 1
+          },
+          "MasteryLevels": {
+            "Type": "int32",
+            "Value": 10
+          },
+          "ExperiencePerKill": {
+            "Type": "int32",
+            "Value": 25
+          },
+          "ExperiencePerShot": {
+            "Type": "int32",
+            "Value": 2
+          },
+          "MasteryBonuses": {
+            "Type": "TArray<FMasteryBonus>",
+            "Value": [
+              {
+                "Level": {
+                  "Type": "int32",
+                  "Value": 1
+                },
+                "BonusType": {
+                  "Type": "EMasteryBonusType",
+                  "Value": "Accuracy"
+                },
+                "BonusValue": {
+                  "Type": "float",
+                  "Value": 0.05
+                }
+              },
+              {
+                "Level": {
+                  "Type": "int32",
+                  "Value": 3
+                },
+                "BonusType": {
+                  "Type": "EMasteryBonusType",
+                  "Value": "ReloadSpeed"
+                },
+                "BonusValue": {
+                  "Type": "float",
+                  "Value": 0.1
+                }
+              },
+              {
+                "Level": {
+                  "Type": "int32",
+                  "Value": 5
+                },
+                "BonusType": {
+                  "Type": "EMasteryBonusType",
+                  "Value": "Damage"
+                },
+                "BonusValue": {
+                  "Type": "float",
+                  "Value": 0.08
+                }
+              },
+              {
+                "Level": {
+                  "Type": "int32",
+                  "Value": 7
+                },
+                "BonusType": {
+                  "Type": "EMasteryBonusType",
+                  "Value": "Recoil"
+                },
+                "BonusValue": {
+                  "Type": "float",
+                  "Value": -0.15
+                }
+              },
+              {
+                "Level": {
+                  "Type": "int32",
+                  "Value": 10
+                },
+                "BonusType": {
+                  "Type": "EMasteryBonusType",
+                  "Value": "CriticalChance"
+                },
+                "BonusValue": {
+                  "Type": "float",
+                  "Value": 0.1
+                }
+              }
+            ]
+          }
+        }
+      },
+      "RarityBalance": {
+        "Type": "FRarityBalance",
+        "Value": {
+          "SpawnWeight": {
+            "Type": "float",
+            "Value": 100.0
+          },
+          "QualityVariance": {
+            "Type": "float",
+            "Value": 0.15
+          },
+          "ConditionRange": {
+            "Type": "FVector2D",
+            "Value": {
+              "X": 0.7,
+              "Y": 1.0
+            }
+          },
+          "ModificationSlots": {
+            "Type": "int32",
+            "Value": 3
+          },
+          "UpgradeCompatibility": {
+            "Type": "TArray<FString>",
+            "Value": [
+              "PistolBarrel",
+              "PistolSights",
+              "PistolGrip",
+              "PistolTrigger",
+              "LaserSight",
+              "Flashlight"
+            ]
+          }
+        }
+      },
+      "AIBalance": {
+        "Type": "FAIBalance",
+        "Value": {
+          "NPCAccuracyModifier": {
+            "Type": "float",
+            "Value": 0.8
+          },
+          "NPCDamageModifier": {
+            "Type": "float",
+            "Value": 0.9
+          },
+          "NPCReactionTime": {
+            "Type": "float",
+            "Value": 1.2
+          },
+          "PoliceResponseModifier": {
+            "Type": "float",
+            "Value": 1.5
+          },
+          "CivilianFearFactor": {
+            "Type": "float",
+            "Value": 0.8
+          }
+        }
+      },
+      "LegalBalance": {
+        "Type": "FLegalBalance",
+        "Value": {
+          "LegalityScore": {
+            "Type": "int32",
+            "Value": 60
+          },
+          "PoliceInterestLevel": {
+            "Type": "int32",
+            "Value": 3
+          },
+          "LicenseRequirementStrength": {
+            "Type": "float",
+            "Value": 0.8
+          },
+          "BlackMarketPriceMultiplier": {
+            "Type": "float",
+            "Value": 1.4
+          },
+          "ConfiscationRisk": {
+            "Type": "float",
+            "Value": 0.15
+          },
+          "LegalPenalties": {
+            "Type": "TArray<FLegalPenalty>",
+            "Value": [
+              {
+                "ViolationType": {
+                  "Type": "FString",
+                  "Value": "UnlicensedPossession"
+                },
+                "FineAmount": {
+                  "Type": "int32",
+                  "Value": 2000
+                },
+                "JailTime": {
+                  "Type": "float",
+                  "Value": 24.0
+                },
+                "ReputationLoss": {
+                  "Type": "int32",
+                  "Value": 50
+                }
+              },
+              {
+                "ViolationType": {
+                  "Type": "FString",
+                  "Value": "IllegalSale"
+                },
+                "FineAmount": {
+                  "Type": "int32",
+                  "Value": 5000
+                },
+                "JailTime": {
+                  "Type": "float",
+                  "Value": 72.0
+                },
+                "ReputationLoss": {
+                  "Type": "int32",
+                  "Value": 100
+                }
+              }
+            ]
+          }
+        }
+      },
+      "MaintenanceBalance": {
+        "Type": "FMaintenanceBalance",
+        "Value": {
+          "DurabilityLossRate": {
+            "Type": "float",
+            "Value": 0.1
+          },
+          "CleaningCost": {
+            "Type": "int32",
+            "Value": 25
+          },
+          "RepairCost": {
+            "Type": "int32",
+            "Value": 150
+          },
+          "MaintenanceInterval": {
+            "Type": "int32",
+            "Value": 500
+          },
+          "PerformanceDegradation": {
+            "Type": "UCurveFloat",
+            "Value": "/Game/Data/Curves/C_WeaponDegradation.C_WeaponDegradation"
+          }
+        }
+      }
+    },
+    "AmmoBalance_9mm": {
+      "BalanceID": {
+        "Type": "FString",
+        "Value": "AmmoBalance_9mm"
+      },
+      "ItemID": {
+        "Type": "FString",
+        "Value": "9mm_Parabellum"
+      },
+      "BalanceCategory": {
+        "Type": "EBalanceCategory",
+        "Value": "Ammunition"
+      },
+      "EconomicBalance": {
+        "Type": "FEconomicBalance",
+        "Value": {
+          "BasePrice": {
+            "Type": "int32",
+            "Value": 2
+          },
+          "MinPrice": {
+            "Type": "int32",
+            "Value": 1
+          },
+          "MaxPrice": {
+            "Type": "int32",
+            "Value": 5
+          },
+          "InflationRate": {
+            "Type": "float",
+            "Value": 0.01
+          },
+          "DemandMultiplier": {
+            "Type": "float",
+            "Value": 1.2
+          },
+          "SupplyMultiplier": {
+            "Type": "float",
+            "Value": 1.5
+          },
+          "SeasonalPriceModifier": {
+            "Type": "TMap<FString, float>",
+            "Value": {
+              "Spring": 1.0,
+              "Summer": 1.05,
+              "Autumn": 0.98,
+              "Winter": 1.02
+            }
+          }
+        }
+      },
+      "SupplyBalance": {
+        "Type": "FSupplyBalance",
+        "Value": {
+          "BaseAvailability": {
+            "Type": "float",
+            "Value": 0.9
+          },
+          "RestockRate": {
+            "Type": "float",
+            "Value": 1.5
+          },
+          "MaxStock": {
+            "Type": "int32",
+            "Value": 1000
+          },
+          "MinStock": {
+            "Type": "int32",
+            "Value": 50
+          },
+          "ShortageThreshold": {
+            "Type": "float",
+            "Value": 0.2
+          },
+          "SurplusThreshold": {
+            "Type": "float",
+            "Value": 0.8
+          }
+        }
+      }
+    }
+  }
+}

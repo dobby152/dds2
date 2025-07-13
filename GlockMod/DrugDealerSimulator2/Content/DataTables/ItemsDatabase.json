@@ -1,0 +1,52 @@
+{
+  "glock17": {
+    "RowName": "glock17",
+    "ItemID": "glock17",
+    "ItemName": "Glock 17",
+    "ItemType": "Weapon",
+    "ItemSubType": "Pistol",
+    "ItemDescription": "Spolehlivá služební pistole. Oblíbená volba policistů a bezpečnostních složek po celém světě.",
+    "ItemIcon": "/Game/UI/Icons/Weapons/glock17_icon",
+    "ItemMesh": "/Game/Meshes/Weapons/glock17_mesh",
+    "ItemWeight": 0.625,
+    "ItemValue": 800,
+    "ItemRarity": "Common",
+    "CanStack": false,
+    "MaxStackSize": 1,
+    "IsConsumable": false,
+    "IsWeapon": true,
+    "WeaponDamage": 35,
+    "WeaponAccuracy": 75,
+    "WeaponRange": 50,
+    "WeaponFireRate": 400,
+    "WeaponAmmoType": "9mm",
+    "WeaponMagazineSize": 17,
+    "WeaponReloadTime": 2.5,
+    "WeaponSound": "/Game/Audio/Weapons/pistol_shot",
+    "ItemTags": [
+      "Weapon",
+      "Pistol",
+      "Firearm",
+      "Legal"
+    ],
+    "ShopAvailability": {
+      "BlackMarket": {
+        "Available": true,
+        "SpawnChance": 0.6,
+        "MinQuantity": 1,
+        "MaxQuantity": 2,
+        "PriceMultiplier": 1.2
+      },
+      "GunShop": {
+        "Available": true,
+        "SpawnChance": 0.8,
+        "MinQuantity": 1,
+        "MaxQuantity": 3,
+        "PriceMultiplier": 1.0
+      }
+    },
+    "CraftingRecipe": null,
+    "RequiredLevel": 1,
+    "LegalStatus": "Restricted"
+  }
+}

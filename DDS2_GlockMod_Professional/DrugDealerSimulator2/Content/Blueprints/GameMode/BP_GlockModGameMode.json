@@ -1,0 +1,641 @@
+{
+  "Type": "Blueprint",
+  "Name": "BP_GlockModGameMode",
+  "Class": "UBlueprint",
+  "ParentClass": "/Game/Blueprints/GameMode/BP_GameModeBase.BP_GameModeBase_C",
+  "BlueprintType": "BPTYPE_Normal",
+  "Properties": {
+    "bModInitialized": {
+      "Type": "bool",
+      "Value": false
+    },
+    "GlockInventoryManager": {
+      "Type": "AActor",
+      "Value": null
+    },
+    "ModVersion": {
+      "Type": "FString",
+      "Value": "1.0.0"
+    },
+    "bAutoEquipGlock": {
+      "Type": "bool",
+      "Value": true
+    },
+    "bShowWelcomeMessage": {
+      "Type": "bool",
+      "Value": true
+    }
+  },
+  "EventGraph": {
+    "Events": [
+      {
+        "EventName": "BeginPlay",
+        "EventType": "ActorBeginPlay",
+        "Nodes": [
+          {
+            "NodeType": "CallFunction",
+            "FunctionName": "InitializeGlockMod"
+          }
+        ]
+      },
+      {
+        "EventName": "OnPlayerJoined",
+        "EventType": "CustomEvent",
+        "Parameters": [
+          {
+            "ParameterName": "PlayerController",
+            "ParameterType": "APlayerController"
+          }
+        ],
+        "Nodes": [
+          {
+            "NodeType": "CallFunction",
+            "FunctionName": "SetupPlayerGlock",
+            "Parameters": ["PlayerController"]
+          }
+        ]
+      },
+      {
+        "EventName": "OnGameStarted",
+        "EventType": "CustomEvent",
+        "Nodes": [
+          {
+            "NodeType": "CallFunction",
+            "FunctionName": "EnsureAllPlayersHaveGlock"
+          }
+        ]
+      }
+    ],
+    "Functions": [
+      {
+        "FunctionName": "InitializeGlockMod",
+        "ReturnType": "void",
+        "Parameters": [],
+        "Implementation": {
+          "Nodes": [
+            {
+              "NodeType": "PrintString",
+              "String": {
+                "NodeType": "Format",
+                "FormatText": "[Glock Mod v{0}] Inicializace modu...",
+                "Arguments": ["ModVersion"]
+              },
+              "TextColor": {"R": 0.0, "G": 1.0, "B": 1.0, "A": 1.0},
+              "PrintToLog": true,
+              "Duration": 5.0
+            },
+            {
+              "NodeType": "CallFunction",
+              "FunctionName": "CreateGlockInventoryManager"
+            },
+            {
+              "NodeType": "CallFunction",
+              "FunctionName": "RegisterModEvents"
+            },
+            {
+              "NodeType": "Delay",
+              "Duration": 2.0,
+              "OutputExec": [
+                {
+                  "NodeType": "CallFunction",
+                  "FunctionName": "SetupExistingPlayers"
+                }
+              ]
+            },
+            {
+              "NodeType": "SetVariable",
+              "VariableName": "bModInitialized",
+              "Value": true
+            },
+            {
+              "NodeType": "Branch",
+              "Condition": "bShowWelcomeMessage",
+              "TrueExec": [
+                {
+                  "NodeType": "CallFunction",
+                  "FunctionName": "ShowWelcomeMessage"
+                }
+              ]
+            }
+          ]
+        }
+      },
+      {
+        "FunctionName": "CreateGlockInventoryManager",
+        "ReturnType": "void",
+        "Parameters": [],
+        "Implementation": {
+          "Nodes": [
+            {
+              "NodeType": "SpawnActor",
+              "Class": "BP_PlayerInventoryManager_Glock_C",
+              "SpawnTransform": {
+                "Location": {"X": 0.0, "Y": 0.0, "Z": 0.0},
+                "Rotation": {"Pitch": 0.0, "Yaw": 0.0, "Roll": 0.0},
+                "Scale": {"X": 1.0, "Y": 1.0, "Z": 1.0}
+              },
+              "OutputPin": "SpawnedManager"
+            },
+            {
+              "NodeType": "Branch",
+              "Condition": {
+                "NodeType": "IsValid",
+                "Object": "SpawnedManager"
+              },
+              "TrueExec": [
+                {
+                  "NodeType": "SetVariable",
+                  "VariableName": "GlockInventoryManager",
+                  "Value": "SpawnedManager"
+                },
+                {
+                  "NodeType": "PrintString",
+                  "String": "[Glock Mod] ✓ Inventory Manager vytvořen",
+                  "TextColor": {"R": 0.0, "G": 1.0, "B": 0.0, "A": 1.0},
+                  "PrintToLog": true
+                }
+              ],
+              "FalseExec": [
+                {
+                  "NodeType": "PrintString",
+                  "String": "[Glock Mod] ✗ CHYBA: Nelze vytvořit Inventory Manager!",
+                  "TextColor": {"R": 1.0, "G": 0.0, "B": 0.0, "A": 1.0},
+                  "PrintToLog": true
+                }
+              ]
+            }
+          ]
+        }
+      },
+      {
+        "FunctionName": "SetupPlayerGlock",
+        "ReturnType": "void",
+        "Parameters": [
+          {
+            "ParameterName": "PlayerController",
+            "ParameterType": "APlayerController"
+          }
+        ],
+        "Implementation": {
+          "Nodes": [
+            {
+              "NodeType": "Branch",
+              "Condition": {
+                "NodeType": "IsValid",
+                "Object": "PlayerController"
+              },
+              "TrueExec": [
+                {
+                  "NodeType": "GetPawn",
+                  "Target": "PlayerController",
+                  "OutputPin": "PlayerPawn"
+                },
+                {
+                  "NodeType": "Cast",
+                  "Object": "PlayerPawn",
+                  "Class": "BP_PlayerCharacter_C",
+                  "OutputPin": "PlayerCharacter"
+                },
+                {
+                  "NodeType": "Branch",
+                  "Condition": {
+                    "NodeType": "IsValid",
+                    "Object": "PlayerCharacter"
+                  },
+                  "TrueExec": [
+                    {
+                      "NodeType": "PrintString",
+                      "String": "[Glock Mod] Nastavuji Glock pro hráče...",
+                      "TextColor": {"R": 0.0, "G": 0.8, "B": 1.0, "A": 1.0},
+                      "PrintToLog": true
+                    },
+                    {
+                      "NodeType": "Delay",
+                      "Duration": 1.0,
+                      "OutputExec": [
+                        {
+                          "NodeType": "CallFunction",
+                          "FunctionName": "GiveGlockToPlayer",
+                          "Parameters": ["PlayerCharacter"]
+                        }
+                      ]
+                    }
+                  ]
+                }
+              ]
+            }
+          ]
+        }
+      },
+      {
+        "FunctionName": "GiveGlockToPlayer",
+        "ReturnType": "void",
+        "Parameters": [
+          {
+            "ParameterName": "PlayerCharacter",
+            "ParameterType": "APawn"
+          }
+        ],
+        "Implementation": {
+          "Nodes": [
+            {
+              "NodeType": "CallFunction",
+              "FunctionName": "GetPlayerInventoryComponent",
+              "Target": "PlayerCharacter",
+              "OutputPin": "InventoryComponent"
+            },
+            {
+              "NodeType": "Branch",
+              "Condition": {
+                "NodeType": "IsValid",
+                "Object": "InventoryComponent"
+              },
+              "TrueExec": [
+                {
+                  "NodeType": "CallFunction",
+                  "FunctionName": "HasItem",
+                  "Target": "InventoryComponent",
+                  "Parameters": ["Glock17"],
+                  "OutputPin": "bAlreadyHasGlock"
+                },
+                {
+                  "NodeType": "Branch",
+                  "Condition": "bAlreadyHasGlock",
+                  "TrueExec": [
+                    {
+                      "NodeType": "PrintString",
+                      "String": "[Glock Mod] Hráč již má Glock - přeskakuji",
+                      "TextColor": {"R": 0.0, "G": 1.0, "B": 0.0, "A": 1.0},
+                      "PrintToLog": true
+                    }
+                  ],
+                  "FalseExec": [
+                    {
+                      "NodeType": "CallFunction",
+                      "FunctionName": "AddGlockWithAmmo",
+                      "Parameters": ["InventoryComponent"]
+                    },
+                    {
+                      "NodeType": "Branch",
+                      "Condition": "bAutoEquipGlock",
+                      "TrueExec": [
+                        {
+                          "NodeType": "Delay",
+                          "Duration": 0.5,
+                          "OutputExec": [
+                            {
+                              "NodeType": "CallFunction",
+                              "FunctionName": "AutoEquipGlock",
+                              "Parameters": ["PlayerCharacter"]
+                            }
+                          ]
+                        }
+                      ]
+                    }
+                  ]
+                }
+              ]
+            }
+          ]
+        }
+      },
+      {
+        "FunctionName": "AddGlockWithAmmo",
+        "ReturnType": "void",
+        "Parameters": [
+          {
+            "ParameterName": "InventoryComponent",
+            "ParameterType": "UInventoryComponent"
+          }
+        ],
+        "Implementation": {
+          "Nodes": [
+            {
+              "NodeType": "CallFunction",
+              "FunctionName": "CreateItemInstance",
+              "Parameters": [
+                "Glock17",
+                1,
+                100.0
+              ],
+              "OutputPin": "GlockItem"
+            },
+            {
+              "NodeType": "CallFunction",
+              "FunctionName": "CreateItemInstance",
+              "Parameters": [
+                "9mm_Parabellum",
+                100,
+                100.0
+              ],
+              "OutputPin": "AmmoItem"
+            },
+            {
+              "NodeType": "CallFunction",
+              "FunctionName": "AddItemToInventory",
+              "Target": "InventoryComponent",
+              "Parameters": ["GlockItem"],
+              "OutputPin": "bGlockAdded"
+            },
+            {
+              "NodeType": "CallFunction",
+              "FunctionName": "AddItemToInventory",
+              "Target": "InventoryComponent",
+              "Parameters": ["AmmoItem"],
+              "OutputPin": "bAmmoAdded"
+            },
+            {
+              "NodeType": "Branch",
+              "Condition": {
+                "NodeType": "And",
+                "A": "bGlockAdded",
+                "B": "bAmmoAdded"
+              },
+              "TrueExec": [
+                {
+                  "NodeType": "PrintString",
+                  "String": "[Glock Mod] ✓ Glock 17 + 100 nábojů přidáno!",
+                  "TextColor": {"R": 0.0, "G": 1.0, "B": 0.0, "A": 1.0},
+                  "PrintToLog": true
+                },
+                {
+                  "NodeType": "CallFunction",
+                  "FunctionName": "ShowGlockGivenNotification"
+                },
+                {
+                  "NodeType": "CallFunction",
+                  "FunctionName": "PlayGlockGivenSound"
+                }
+              ],
+              "FalseExec": [
+                {
+                  "NodeType": "PrintString",
+                  "String": "[Glock Mod] ✗ Chyba při přidávání Glocku/munice!",
+                  "TextColor": {"R": 1.0, "G": 0.0, "B": 0.0, "A": 1.0},
+                  "PrintToLog": true
+                }
+              ]
+            }
+          ]
+        }
+      },
+      {
+        "FunctionName": "AutoEquipGlock",
+        "ReturnType": "void",
+        "Parameters": [
+          {
+            "ParameterName": "PlayerCharacter",
+            "ParameterType": "APawn"
+          }
+        ],
+        "Implementation": {
+          "Nodes": [
+            {
+              "NodeType": "CallFunction",
+              "FunctionName": "GetWeaponComponent",
+              "Target": "PlayerCharacter",
+              "OutputPin": "WeaponComponent"
+            },
+            {
+              "NodeType": "Branch",
+              "Condition": {
+                "NodeType": "IsValid",
+                "Object": "WeaponComponent"
+              },
+              "TrueExec": [
+                {
+                  "NodeType": "CallFunction",
+                  "FunctionName": "EquipWeaponByID",
+                  "Target": "WeaponComponent",
+                  "Parameters": ["Glock17"],
+                  "OutputPin": "bEquipSuccess"
+                },
+                {
+                  "NodeType": "Branch",
+                  "Condition": "bEquipSuccess",
+                  "TrueExec": [
+                    {
+                      "NodeType": "PrintString",
+                      "String": "[Glock Mod] ✓ Glock automaticky vybaven!",
+                      "TextColor": {"R": 0.0, "G": 1.0, "B": 0.0, "A": 1.0},
+                      "PrintToLog": true
+                    }
+                  ],
+                  "FalseExec": [
+                    {
+                      "NodeType": "PrintString",
+                      "String": "[Glock Mod] ⚠ Nelze automaticky vybavit Glock",
+                      "TextColor": {"R": 1.0, "G": 0.5, "B": 0.0, "A": 1.0},
+                      "PrintToLog": true
+                    }
+                  ]
+                }
+              ]
+            }
+          ]
+        }
+      },
+      {
+        "FunctionName": "SetupExistingPlayers",
+        "ReturnType": "void",
+        "Parameters": [],
+        "Implementation": {
+          "Nodes": [
+            {
+              "NodeType": "GetAllActorsOfClass",
+              "ActorClass": "APlayerController",
+              "OutputPin": "PlayerControllers"
+            },
+            {
+              "NodeType": "ForEachLoop",
+              "Array": "PlayerControllers",
+              "LoopBody": [
+                {
+                  "NodeType": "Cast",
+                  "Object": "ArrayElement",
+                  "Class": "APlayerController",
+                  "OutputPin": "PlayerController"
+                },
+                {
+                  "NodeType": "CallFunction",
+                  "FunctionName": "SetupPlayerGlock",
+                  "Parameters": ["PlayerController"]
+                }
+              ]
+            }
+          ]
+        }
+      },
+      {
+        "FunctionName": "EnsureAllPlayersHaveGlock",
+        "ReturnType": "void",
+        "Parameters": [],
+        "Implementation": {
+          "Nodes": [
+            {
+              "NodeType": "GetAllActorsOfClass",
+              "ActorClass": "BP_PlayerCharacter_C",
+              "OutputPin": "PlayerCharacters"
+            },
+            {
+              "NodeType": "ForEachLoop",
+              "Array": "PlayerCharacters",
+              "LoopBody": [
+                {
+                  "NodeType": "CallFunction",
+                  "FunctionName": "CheckPlayerGlock",
+                  "Parameters": ["ArrayElement"]
+                }
+              ]
+            }
+          ]
+        }
+      },
+      {
+        "FunctionName": "CheckPlayerGlock",
+        "ReturnType": "void",
+        "Parameters": [
+          {
+            "ParameterName": "PlayerCharacter",
+            "ParameterType": "APawn"
+          }
+        ],
+        "Implementation": {
+          "Nodes": [
+            {
+              "NodeType": "CallFunction",
+              "FunctionName": "GetPlayerInventoryComponent",
+              "Target": "PlayerCharacter",
+              "OutputPin": "InventoryComponent"
+            },
+            {
+              "NodeType": "CallFunction",
+              "FunctionName": "HasItem",
+              "Target": "InventoryComponent",
+              "Parameters": ["Glock17"],
+              "OutputPin": "bHasGlock"
+            },
+            {
+              "NodeType": "Branch",
+              "Condition": {
+                "NodeType": "Not",
+                "Input": "bHasGlock"
+              },
+              "TrueExec": [
+                {
+                  "NodeType": "PrintString",
+                  "String": "[Glock Mod] Hráč nemá Glock - přidávám...",
+                  "TextColor": {"R": 1.0, "G": 0.5, "B": 0.0, "A": 1.0},
+                  "PrintToLog": true
+                },
+                {
+                  "NodeType": "CallFunction",
+                  "FunctionName": "GiveGlockToPlayer",
+                  "Parameters": ["PlayerCharacter"]
+                }
+              ]
+            }
+          ]
+        }
+      },
+      {
+        "FunctionName": "ShowWelcomeMessage",
+        "ReturnType": "void",
+        "Parameters": [],
+        "Implementation": {
+          "Nodes": [
+            {
+              "NodeType": "Delay",
+              "Duration": 3.0,
+              "OutputExec": [
+                {
+                  "NodeType": "CallFunction",
+                  "FunctionName": "ShowNotificationToAllPlayers",
+                  "Parameters": [
+                    {
+                      "NodeType": "MakeText",
+                      "Text": "Glock Mod aktivní!"
+                    },
+                    {
+                      "NodeType": "MakeText",
+                      "Text": "Glock 17 byl přidán do vašeho inventáře"
+                    },
+                    "/Game/UI/Icons/Weapons/T_Glock17_Icon.T_Glock17_Icon",
+                    8.0,
+                    "Info"
+                  ]
+                }
+              ]
+            }
+          ]
+        }
+      },
+      {
+        "FunctionName": "ShowGlockGivenNotification",
+        "ReturnType": "void",
+        "Parameters": [],
+        "Implementation": {
+          "Nodes": [
+            {
+              "NodeType": "CallFunction",
+              "FunctionName": "ShowNotificationToAllPlayers",
+              "Parameters": [
+                {
+                  "NodeType": "MakeText",
+                  "Text": "Nová zbraň získána!"
+                },
+                {
+                  "NodeType": "MakeText",
+                  "Text": "Glock 17 + 100 nábojů 9mm"
+                },
+                "/Game/UI/Icons/Weapons/T_Glock17_Icon.T_Glock17_Icon",
+                5.0,
+                "Success"
+              ]
+            }
+          ]
+        }
+      },
+      {
+        "FunctionName": "PlayGlockGivenSound",
+        "ReturnType": "void",
+        "Parameters": [],
+        "Implementation": {
+          "Nodes": [
+            {
+              "NodeType": "PlaySound2D",
+              "Sound": "/Game/Audio/UI/SC_WeaponAcquired.SC_WeaponAcquired",
+              "VolumeMultiplier": 0.7,
+              "PitchMultiplier": 1.0
+            }
+          ]
+        }
+      },
+      {
+        "FunctionName": "RegisterModEvents",
+        "ReturnType": "void",
+        "Parameters": [],
+        "Implementation": {
+          "Nodes": [
+            {
+              "NodeType": "BindEvent",
+              "EventName": "OnPlayerSpawned",
+              "Delegate": "OnPlayerSpawnedDelegate"
+            },
+            {
+              "NodeType": "BindEvent",
+              "EventName": "OnGameLoaded",
+              "Delegate": "OnGameLoadedDelegate"
+            },
+            {
+              "NodeType": "PrintString",
+              "String": "[Glock Mod] ✓ Event handlery zaregistrovány",
+              "TextColor": {"R": 0.0, "G": 1.0, "B": 0.0, "A": 1.0},
+              "PrintToLog": true
+            }
+          ]
+        }
+      }
+    ]
+  }
+}

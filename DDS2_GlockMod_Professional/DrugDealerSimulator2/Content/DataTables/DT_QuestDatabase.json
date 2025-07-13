@@ -1,0 +1,458 @@
+{
+  "Type": "DataTable",
+  "Name": "DT_QuestDatabase",
+  "Class": "UDataTable",
+  "Archetype": "DataTable'/Game/DataTables/DT_QuestDatabase.DT_QuestDatabase'",
+  "Properties": {
+    "RowStruct": {
+      "ObjectName": "QuestDataStruct",
+      "ObjectPath": "/Game/Blueprints/Data/QuestDataStruct"
+    }
+  },
+  "Rows": {
+    "FirstFirearm": {
+      "QuestID": {
+        "Type": "FString",
+        "Value": "FirstFirearm"
+      },
+      "QuestName": {
+        "Type": "FText",
+        "Value": {
+          "SourceString": "První zbraň",
+          "Key": "Quests.FirstFirearm.Name",
+          "Namespace": "DDS2"
+        }
+      },
+      "QuestDescription": {
+        "Type": "FText",
+        "Value": {
+          "SourceString": "Čas získat svou první palnou zbraň. Navštiv zbrojíře nebo najdi jiný způsob.",
+          "Key": "Quests.FirstFirearm.Description",
+          "Namespace": "DDS2"
+        }
+      },
+      "QuestType": {
+        "Type": "EQuestType",
+        "Value": "Acquisition"
+      },
+      "QuestCategory": {
+        "Type": "EQuestCategory",
+        "Value": "Weapons"
+      },
+      "QuestDifficulty": {
+        "Type": "EQuestDifficulty",
+        "Value": "Easy"
+      },
+      "RequiredLevel": {
+        "Type": "int32",
+        "Value": 1
+      },
+      "PrerequisiteQuests": {
+        "Type": "TArray<FString>",
+        "Value": []
+      },
+      "QuestObjectives": {
+        "Type": "TArray<FQuestObjective>",
+        "Value": [
+          {
+            "ObjectiveID": {
+              "Type": "FString",
+              "Value": "GetFirearmsLicense"
+            },
+            "ObjectiveDescription": {
+              "Type": "FText",
+              "Value": {
+                "SourceString": "Získej zbrojní licenci",
+                "Key": "Quests.FirstFirearm.Obj1.Description",
+                "Namespace": "DDS2"
+              }
+            },
+            "ObjectiveType": {
+              "Type": "EObjectiveType",
+              "Value": "ObtainLicense"
+            },
+            "TargetItem": {
+              "Type": "FString",
+              "Value": "FirearmsLicense"
+            },
+            "TargetQuantity": {
+              "Type": "int32",
+              "Value": 1
+            },
+            "bIsOptional": {
+              "Type": "bool",
+              "Value": true
+            },
+            "bIsCompleted": {
+              "Type": "bool",
+              "Value": false
+            }
+          },
+          {
+            "ObjectiveID": {
+              "Type": "FString",
+              "Value": "AcquireGlock"
+            },
+            "ObjectiveDescription": {
+              "Type": "FText",
+              "Value": {
+                "SourceString": "Získej Glock 17",
+                "Key": "Quests.FirstFirearm.Obj2.Description",
+                "Namespace": "DDS2"
+              }
+            },
+            "ObjectiveType": {
+              "Type": "EObjectiveType",
+              "Value": "AcquireItem"
+            },
+            "TargetItem": {
+              "Type": "FString",
+              "Value": "Glock17"
+            },
+            "TargetQuantity": {
+              "Type": "int32",
+              "Value": 1
+            },
+            "bIsOptional": {
+              "Type": "bool",
+              "Value": false
+            },
+            "bIsCompleted": {
+              "Type": "bool",
+              "Value": false
+            }
+          },
+          {
+            "ObjectiveID": {
+              "Type": "FString",
+              "Value": "BuyAmmo"
+            },
+            "ObjectiveDescription": {
+              "Type": "FText",
+              "Value": {
+                "SourceString": "Kup 9mm munici (50 kusů)",
+                "Key": "Quests.FirstFirearm.Obj3.Description",
+                "Namespace": "DDS2"
+              }
+            },
+            "ObjectiveType": {
+              "Type": "EObjectiveType",
+              "Value": "AcquireItem"
+            },
+            "TargetItem": {
+              "Type": "FString",
+              "Value": "9mm_Parabellum"
+            },
+            "TargetQuantity": {
+              "Type": "int32",
+              "Value": 50
+            },
+            "bIsOptional": {
+              "Type": "bool",
+              "Value": false
+            },
+            "bIsCompleted": {
+              "Type": "bool",
+              "Value": false
+            }
+          }
+        ]
+      },
+      "QuestRewards": {
+        "Type": "FQuestRewards",
+        "Value": {
+          "ExperienceReward": {
+            "Type": "int32",
+            "Value": 500
+          },
+          "MoneyReward": {
+            "Type": "int32",
+            "Value": 300
+          },
+          "ItemRewards": {
+            "Type": "TArray<FItemReward>",
+            "Value": [
+              {
+                "ItemID": {
+                  "Type": "FString",
+                  "Value": "CleaningKit"
+                },
+                "Quantity": {
+                  "Type": "int32",
+                  "Value": 1
+                }
+              }
+            ]
+          },
+          "ReputationReward": {
+            "Type": "int32",
+            "Value": 10
+          },
+          "UnlockRewards": {
+            "Type": "TArray<FString>",
+            "Value": [
+              "WeaponMaintenance",
+              "AdvancedShooting"
+            ]
+          }
+        }
+      },
+      "QuestGiver": {
+        "Type": "FString",
+        "Value": "GunShopOwner"
+      },
+      "QuestLocation": {
+        "Type": "FString",
+        "Value": "GunShop_Downtown"
+      },
+      "TimeLimit": {
+        "Type": "float",
+        "Value": 0.0
+      },
+      "bIsRepeatable": {
+        "Type": "bool",
+        "Value": false
+      },
+      "bIsMainQuest": {
+        "Type": "bool",
+        "Value": false
+      },
+      "QuestTags": {
+        "Type": "TArray<FGameplayTag>",
+        "Value": [
+          "Quest.Weapons",
+          "Quest.Tutorial",
+          "Quest.Legal"
+        ]
+      }
+    },
+    "WeaponCollector": {
+      "QuestID": {
+        "Type": "FString",
+        "Value": "WeaponCollector"
+      },
+      "QuestName": {
+        "Type": "FText",
+        "Value": {
+          "SourceString": "Sběratel zbraní",
+          "Key": "Quests.WeaponCollector.Name",
+          "Namespace": "DDS2"
+        }
+      },
+      "QuestDescription": {
+        "Type": "FText",
+        "Value": {
+          "SourceString": "Získej kolekci různých typů zbraní. Každý typ má své výhody.",
+          "Key": "Quests.WeaponCollector.Description",
+          "Namespace": "DDS2"
+        }
+      },
+      "QuestType": {
+        "Type": "EQuestType",
+        "Value": "Collection"
+      },
+      "QuestCategory": {
+        "Type": "EQuestCategory",
+        "Value": "Weapons"
+      },
+      "QuestDifficulty": {
+        "Type": "EQuestDifficulty",
+        "Value": "Medium"
+      },
+      "RequiredLevel": {
+        "Type": "int32",
+        "Value": 5
+      },
+      "PrerequisiteQuests": {
+        "Type": "TArray<FString>",
+        "Value": [
+          "FirstFirearm"
+        ]
+      },
+      "QuestObjectives": {
+        "Type": "TArray<FQuestObjective>",
+        "Value": [
+          {
+            "ObjectiveID": {
+              "Type": "FString",
+              "Value": "CollectPistol"
+            },
+            "ObjectiveDescription": {
+              "Type": "FText",
+              "Value": {
+                "SourceString": "Vlastni pistoli (Glock 17 nebo jinou)",
+                "Key": "Quests.WeaponCollector.Obj1.Description",
+                "Namespace": "DDS2"
+              }
+            },
+            "ObjectiveType": {
+              "Type": "EObjectiveType",
+              "Value": "OwnItemType"
+            },
+            "TargetItemType": {
+              "Type": "FString",
+              "Value": "Pistol"
+            },
+            "TargetQuantity": {
+              "Type": "int32",
+              "Value": 1
+            },
+            "bIsOptional": {
+              "Type": "bool",
+              "Value": false
+            },
+            "bIsCompleted": {
+              "Type": "bool",
+              "Value": false
+            }
+          },
+          {
+            "ObjectiveID": {
+              "Type": "FString",
+              "Value": "CollectRifle"
+            },
+            "ObjectiveDescription": {
+              "Type": "FText",
+              "Value": {
+                "SourceString": "Získej útočnou pušku",
+                "Key": "Quests.WeaponCollector.Obj2.Description",
+                "Namespace": "DDS2"
+              }
+            },
+            "ObjectiveType": {
+              "Type": "EObjectiveType",
+              "Value": "OwnItemType"
+            },
+            "TargetItemType": {
+              "Type": "FString",
+              "Value": "AssaultRifle"
+            },
+            "TargetQuantity": {
+              "Type": "int32",
+              "Value": 1
+            },
+            "bIsOptional": {
+              "Type": "bool",
+              "Value": false
+            },
+            "bIsCompleted": {
+              "Type": "bool",
+              "Value": false
+            }
+          },
+          {
+            "ObjectiveID": {
+              "Type": "FString",
+              "Value": "CollectShotgun"
+            },
+            "ObjectiveDescription": {
+              "Type": "FText",
+              "Value": {
+                "SourceString": "Získej brokovnici",
+                "Key": "Quests.WeaponCollector.Obj3.Description",
+                "Namespace": "DDS2"
+              }
+            },
+            "ObjectiveType": {
+              "Type": "EObjectiveType",
+              "Value": "OwnItemType"
+            },
+            "TargetItemType": {
+              "Type": "FString",
+              "Value": "Shotgun"
+            },
+            "TargetQuantity": {
+              "Type": "int32",
+              "Value": 1
+            },
+            "bIsOptional": {
+              "Type": "bool",
+              "Value": false
+            },
+            "bIsCompleted": {
+              "Type": "bool",
+              "Value": false
+            }
+          }
+        ]
+      },
+      "QuestRewards": {
+        "Type": "FQuestRewards",
+        "Value": {
+          "ExperienceReward": {
+            "Type": "int32",
+            "Value": 1500
+          },
+          "MoneyReward": {
+            "Type": "int32",
+            "Value": 2000
+          },
+          "ItemRewards": {
+            "Type": "TArray<FItemReward>",
+            "Value": [
+              {
+                "ItemID": {
+                  "Type": "FString",
+                  "Value": "WeaponCase"
+                },
+                "Quantity": {
+                  "Type": "int32",
+                  "Value": 1
+                }
+              },
+              {
+                "ItemID": {
+                  "Type": "FString",
+                  "Value": "9mm_Parabellum"
+                },
+                "Quantity": {
+                  "Type": "int32",
+                  "Value": 200
+                }
+              }
+            ]
+          },
+          "ReputationReward": {
+            "Type": "int32",
+            "Value": 25
+          },
+          "UnlockRewards": {
+            "Type": "TArray<FString>",
+            "Value": [
+              "WeaponModification",
+              "BlackMarketAccess"
+            ]
+          }
+        }
+      },
+      "QuestGiver": {
+        "Type": "FString",
+        "Value": "WeaponDealer"
+      },
+      "QuestLocation": {
+        "Type": "FString",
+        "Value": "BlackMarket_Underground"
+      },
+      "TimeLimit": {
+        "Type": "float",
+        "Value": 0.0
+      },
+      "bIsRepeatable": {
+        "Type": "bool",
+        "Value": false
+      },
+      "bIsMainQuest": {
+        "Type": "bool",
+        "Value": false
+      },
+      "QuestTags": {
+        "Type": "TArray<FGameplayTag>",
+        "Value": [
+          "Quest.Weapons",
+          "Quest.Collection",
+          "Quest.Illegal"
+        ]
+      }
+    }
+  }
+}

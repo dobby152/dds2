@@ -1,0 +1,23 @@
+{
+  "mod_name": "Glock Mod",
+  "mod_version": "1.0.0",
+  "mod_author": "DDS2 Modder",
+  "mod_description": "Přidává Glock 17 pistoli do Drug Dealer Simulator 2",
+  "game_version": "1.0+",
+  "mod_type": "Content",
+  "dependencies": [],
+  "conflicts": [],
+  "installation_notes": "Použijte Huslaa's DDS2 ModKit pro instalaci",
+  "files_modified": [
+    "DrugDealerSimulator2/Content/DataTables/ItemsDatabase.json",
+    "DrugDealerSimulator2/Content/DataTables/ShopInventory.json",
+    "DrugDealerSimulator2/Content/DataTables/AmmunitionDatabase.json"
+  ],
+  "changelog": {
+    "1.0.0": [
+      "Přidán Glock 17",
+      "Přidána 9mm munice",
+      "Konfigurace obchodů"
+    ]
+  }
+}

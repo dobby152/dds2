@@ -1,0 +1,45 @@
+{
+  "9mm_parabellum": {
+    "RowName": "9mm_parabellum",
+    "AmmoID": "9mm",
+    "AmmoName": "9mm Parabellum",
+    "AmmoType": "Pistol",
+    "AmmoDescription": "Standardní pistolová munice 9×19mm. Nejpoužívanější pistolová munice na světě.",
+    "AmmoIcon": "/Game/UI/Icons/Ammo/9mm_icon",
+    "AmmoDamageMultiplier": 1.0,
+    "AmmoAccuracyMultiplier": 1.0,
+    "AmmoRangeMultiplier": 1.0,
+    "AmmoWeight": 0.012,
+    "AmmoValue": 2,
+    "AmmoRarity": "Common",
+    "CanStack": true,
+    "MaxStackSize": 100,
+    "CompatibleWeapons": [
+      "glock17",
+      "beretta92",
+      "mp5"
+    ],
+    "ItemTags": [
+      "Ammunition",
+      "9mm",
+      "Pistol"
+    ],
+    "ShopAvailability": {
+      "BlackMarket": {
+        "Available": true,
+        "SpawnChance": 0.9,
+        "MinQuantity": 20,
+        "MaxQuantity": 100,
+        "PriceMultiplier": 1.5
+      },
+      "GunShop": {
+        "Available": true,
+        "SpawnChance": 0.95,
+        "MinQuantity": 50,
+        "MaxQuantity": 200,
+        "PriceMultiplier": 1.0
+      }
+    },
+    "LegalStatus": "Restricted"
+  }
+}
