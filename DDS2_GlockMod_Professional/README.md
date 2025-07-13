@@ -166,3 +166,64 @@ Tento mod je vydán pod MIT licencí. Volně použitelné pro nekomerční úče
 ---
 
 **Varování**: Tento mod přidává realistické zbraně. Určeno pouze pro hráče 18+.
+
+---
+
+## 🚀 **INSTALACE A POUŽITÍ**
+
+### **Rychlá instalace:**
+1. Stáhněte si [Huslaa's DDS2 ModKit](https://www.nexusmods.com/drugdealersimulator2/mods/45)
+2. Stáhněte tento mod z [Releases](https://github.com/dobby152/dds2/releases)
+3. Spusťte `InstallMod.bat` a postupujte podle instrukcí
+4. Spusťte hru - **Glock 17 bude automaticky v inventáři!**
+
+### **Co se stane po instalaci:**
+- ✅ **Glock 17** se automaticky přidá do inventáře
+- ✅ **100 nábojů 9mm** zdarma
+- ✅ **Automatické doplňování** munice pod 20 kusů
+- ✅ **Ochrana proti ztrátě** - nemůžete ztratit Glock
+- ✅ **Uvítací notifikace** s instrukcemi
+
+### **Ovládání:**
+- **Levé tlačítko myši** - Střelba
+- **Pravé tlačítko myši** - Míření
+- **R** - Přebíjení
+- **F** - Inspect zbraně
+- **1-9** - Výběr zbraně z inventáře
+
+---
+
+## 📊 **STATISTIKY**
+
+| Vlastnost | Hodnota |
+|-----------|---------|
+| **Damage** | 35-42 (s variancí) |
+| **Přesnost** | 75% (zlepšuje se s masteryí) |
+| **Dosah** | 50m efektivní / 100m max |
+| **Rychlost střelby** | 400 RPM |
+| **Zásobník** | 17 nábojů |
+| **Přebíjení** | 2.5 sekundy |
+| **Váha** | 0.625 kg |
+| **Cena** | $800 (automaticky zdarma) |
+
+---
+
+## 🔧 **TECHNICKÉ INFORMACE**
+
+- **Verze modu**: 1.0.0
+- **Kompatibilita**: Drug Dealer Simulator 2 v1.0+
+- **Velikost**: ~500 MB
+- **Soubory**: 27 souborů, 8497+ řádků kódu
+- **Architektura**: UE5 Blueprint + DataTable systém
+- **Multiplayer**: Připraveno pro multiplayer
+
+---
+
+## 🎯 **COMMIT INFORMACE**
+
+**Repository**: https://github.com/dobby152/dds2
+**Commit**: `60483c0`
+**Tag**: `v1.0.0`
+**Datum**: 2025-01-13
+
+**Commit message**: 🔫 Add Professional Glock Mod v1.0 for Drug Dealer Simulator 2
